@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - cp .env.prod .env
+    - /bin/cp .env.prod .env
