@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\ResumenPedido;
-use App\Pedido;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
 
 class ResumenPedidoController extends Controller
 {
 
-	function listarResumenes(Request $request)
+	public function listarResumenes(Request $request)
 	{
 		$fecha      = new \DateTime("-6 months");
 		$fechaDesde = $fecha->format('Y-m-d H:i:s');
@@ -43,7 +40,7 @@ class ResumenPedidoController extends Controller
 		]);
 	}
 
-	function verResumen($id){
+	public function verResumen($id){
 		$resumenPedido = ResumenPedido::find($id);
 		return view('adm.clients.pedidos.resumen',  [
 			'resumen'  => $resumenPedido,
@@ -52,7 +49,7 @@ class ResumenPedidoController extends Controller
 		]);
 	}
 
-	function guardarCambios(Request $request){
+	public function guardarCambios(Request $request){
 		$resumenPedido = ResumenPedido::find($request->resumen_id);
 		if ($request->modo_pago) {
 			$resumenPedido->modo_pago = $request->modo_pago;

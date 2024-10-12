@@ -10,6 +10,7 @@ use App\Stock;
 use App\Linea;
 use App\Client;
 use App\Producto;
+use App\Extensions\FileHelper;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -19,7 +20,8 @@ class PedidoController extends Controller
 	public function descargarPorEstado(Request $request){
 
 		$pedidos    = Pedido::where('pdv', 0)->where('estado', $request->estado)->get();
-		$html 	    = view("adm.clients.pedidos.sinArmar", compact('pedidos'))->render();
+		$fileHelper = new FileHelper();
+		$html 	    = view("adm.clients.pedidos.sinArmar", compact('pedidos', 'fileHelper'))->render();
 		$carbon     = Carbon::now();
 		$pdf        = PDF::loadHTML($html);
 		$estadoName = strtolower(str_replace([' ', '/'], '_', Pedido::ESTADOS_PEDIDO[$request->estado]));
@@ -50,10 +52,10 @@ class PedidoController extends Controller
 			}  
 		}
 
-		$carbon = new Carbon($pedido->created_at, 'America/Argentina/Buenos_Aires');
-
-		$html = view("adm.clients.pedidos.factura", compact('resumen', 'pedido', 'carbon'))->render();
-		$pdf = PDF::loadHTML($html)->setPaper('a5', 'portrait');
+		$carbon     = new Carbon($pedido->created_at, env('APP_TIMEZONE'));
+		$fileHelper = new FileHelper();
+		$html       = view("adm.clients.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'fileHelper'))->render();
+		$pdf        = PDF::loadHTML($html)->setPaper('a5', 'portrait');
 		return $pdf->download($pedido->client->nombre.'-'.$carbon->format("d-m-Y")."-".$pedido->id.'.pdf');
 	}
 

@@ -365,7 +365,7 @@ class ProductoController extends Controller
 			$query->where('catalogo', 1);
 		})->get();
 		setlocale(LC_ALL, 'es_ES');
-		$carbon = new Carbon(date("d-m-Y"), 'America/Argentina/Buenos_Aires');
+		$carbon = new Carbon(date("d-m-Y"), env('APP_TIMEZONE'));
 		$html = view("catalogo", compact('categorias', 'carbon'))->render();
 		$options = new Options();
 		$options->set('defaultMediaType', 'all');
@@ -384,7 +384,7 @@ class ProductoController extends Controller
 			$query->where('catalogo', 1);
 		})->get();
 		setlocale(LC_ALL, 'es_ES');
-		$carbon = new Carbon(date("d-m-Y"), 'America/Argentina/Buenos_Aires');
+		$carbon = new Carbon(date("d-m-Y"), env('APP_TIMEZONE'));
 		return view("lista", compact('categorias', 'carbon'));
 	}
 

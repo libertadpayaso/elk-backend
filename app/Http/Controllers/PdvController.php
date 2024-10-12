@@ -13,6 +13,7 @@ use App\Stock;
 use App\Client;
 use MP;
 use Redirect;
+use App\Extensions\FileHelper;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Mail\Comprobante;
 use Carbon\Carbon;
@@ -96,9 +97,10 @@ class PdvController extends Controller
 		}
 	}
 
-	function mail(Request $request){
+	public function mail(Request $request){
 		
-		$pedido = Pedido::find($request->id);
+		$pedido  = Pedido::find($request->id);
+		
 		$resumen = array();
 		foreach($pedido->lineas as $linea){
 			if(array_key_exists($linea->imagen->producto->nombre, $resumen)){
@@ -111,11 +113,11 @@ class PdvController extends Controller
 			}  
 		}
 
-		$carbon = new Carbon($pedido->created_at, 'America/Argentina/Buenos_Aires');
-
-		$nombre = $request->nombre;
-		$html = view("adm.pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre'))->render();
-		$filename  = $carbon->format("d-m-Y")."-".$pedido->id.'.pdf';
+		$nombre     = $request->nombre;
+		$carbon     = new Carbon($pedido->created_at, env('APP_TIMEZONE'));
+		$fileHelper = new FileHelper();
+		$html       = view("adm.pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre', 'fileHelper'))->render();
+		$filename   = $carbon->format("d-m-Y")."-".$pedido->id.'.pdf';
 		PDF::loadHTML($html)->setPaper('a5', 'portrait')->save(public_path().'/pdf/'.$filename);
 		Mail::to($request->email)->send(new Comprobante($carbon->format("d-m-Y"), $carbon->format("H:i"), $filename, $nombre));
 
@@ -171,14 +173,14 @@ class PdvController extends Controller
 		]);
 	}
 
-	function logout()
+	public function logout()
 	{
 		Auth::setDefaultDriver('client');
 		Auth::logout();
 		return redirect('iniciar');
 	}
 
-	function ver($id)
+	public function ver($id)
 	{
 		$pedido = Pedido::find($id);
 		
@@ -196,7 +198,7 @@ class PdvController extends Controller
 		]);
 	}
 
-	function descargar($id){
+	public function descargar($id){
 		$pedido = Pedido::find($id);
 		$resumen = array();
 		foreach($pedido->lineas as $linea){
@@ -210,12 +212,12 @@ class PdvController extends Controller
 			}  
 		}
 
-		$carbon = new Carbon($pedido->created_at, 'America/Argentina/Buenos_Aires');
-
-		$nombre = null;
-		$html = view("adm.pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre'))->render();
+		$nombre     = null;
+		$carbon     = new Carbon($pedido->created_at, env('APP_TIMEZONE'));
+		$fileHelper = new FileHelper();
+		$html       = view("adm.pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre', 'fileHelper'))->render();
+		$pdf        = PDF::loadHTML($html)->setPaper('a5', 'portrait');
 		
-		$pdf = PDF::loadHTML($html)->setPaper('a5', 'portrait');
 		return $pdf->download($carbon->format("d-m-Y")."-".$pedido->id.'.pdf');
 	}
 
