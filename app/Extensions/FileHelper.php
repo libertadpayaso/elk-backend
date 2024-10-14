@@ -2,30 +2,26 @@
 
 namespace App\Extensions;
 
+use Illuminate\Support\Facades\File;
+
 class FileHelper
 {
-    protected $contextOptions = [];
+    protected $publicPath;
 
     public function __construct() {
-        if (env("APP_ENV") != 'prod') {
-            $this->contextOptions = [
-                "ssl" => [
-                    "verify_peer" => false,
-                    "verify_peer_name" => false,
-                ],
-            ];  
-        }
+        $this->publicPath = public_path();
     }
 
- 	public function getBase64($filePath)
+ 	public function getBase64($fileName)
  	{
+        $filePath = $this->publicPath . '/' . $fileName;
         $filetype = pathinfo($filePath, PATHINFO_EXTENSION);
         
         if ($filetype==='svg'){
             $filetype .= '+xml';
         }
 
-        $image = file_get_contents($filePath, false, stream_context_create($this->contextOptions));
+        $image = File::get($filePath);
         return 'data:image/' . $filetype . ';base64,' . base64_encode($image);	
     }
 }

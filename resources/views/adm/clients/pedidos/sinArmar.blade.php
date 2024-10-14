@@ -66,7 +66,7 @@
 						<p style="font-family:eraslight;">Celular: {{$pedido->client->celular}}</p>
 						<h4>Envio: {{$pedido->client->formadeenvio}} </h4>
 						@if($pedido->resumen && $pedido->resumen->observaciones != '')<p style="font-family:eraslight;">Notas: {{$pedido->resumen->observaciones}}</p>@endif
-						<p><img src="{{ $fileHelper->getBase64(asset('assets/img/logos/SINARMAR2021.svg')) }}" alt="Logo del sitio" style="width: 200px;"></p>
+						<p><img src="{{ $fileHelper->getBase64('assets/img/logos/SINARMAR2021.svg') }}" alt="Logo del sitio" style="width: 200px;"></p>
 					</td>
 		@if($loop->index%2!=0)	
 				</tr>

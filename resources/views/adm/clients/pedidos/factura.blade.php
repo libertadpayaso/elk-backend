@@ -58,7 +58,7 @@
 		<thead>
 			<tr>
 				<td colspan="2">
-					<img src="{{ $fileHelper->getBase64( asset('assets/img/logos/logoelknegro.jpg') ) }}">
+					<img src="{{ $fileHelper->getBase64('assets/img/logos/logoelknegro.jpg') }}">
 				</td>
 				<td colspan="2">
 					{{$carbon->format("d/m/y")}}<br>
