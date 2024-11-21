@@ -9,6 +9,8 @@ class Talle extends Model
 {
     use SoftDeletes;
 
+    const TALLE_UNICO = 15;
+
     protected $fillable = [
         'id', 'talle', 'orden'
     ];

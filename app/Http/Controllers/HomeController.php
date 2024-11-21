@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Categoria;
+use App\Imagen;
 use App\Producto;
-use App\Talle;
-use App\Linea;
 use App\Stock;
-use App\Pedido;
-use App\ResumenPedido;
+use App\Talle;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -38,9 +36,49 @@ class HomeController extends Controller
         return view('index',compact('productos', 'categorias', 'ofertas', 'nuevos'));
     }
 
-    public function tareaManual(){
-        /*set_time_limit(600);
-        
+    public function tareaManual($nombreMetodo = null){
+        set_time_limit(600);
+
+        switch ($nombreMetodo) {
+            case 'renovarStock':
+                $this->renovarStock();
+                break;
+            case 'crearStockPDV':
+                $this->crearStockPDV();
+                break;
+            default:
+                echo "Nombre del Metodo incorrecto" . PHP_EOL;
+                break;
+        }
+    }
+
+    private function crearStockPDV()
+    {
+        foreach (Producto::all() as $producto) {
+
+            $imagenes = Imagen::fromAlmacen(Stock::PDV)->where('producto_id', $producto->id)->get();
+            
+            if (count($imagenes) > 0) {
+                continue;
+            }
+            
+            $imagen = new Imagen();
+            $imagen->producto_id = $producto->id;
+            $imagen->nombre      = 'Único';
+            $imagen->codigo      = 'PDV';
+            $imagen->save();
+
+            $stock = new Stock();
+            $stock->talle_id   = Talle::TALLE_UNICO;
+            $stock->imagen_id  = $imagen->id;
+            $stock->almacen_id = Stock::PDV;
+            $stock->stock      = 0;
+            $stock->save();
+        }
+    }
+
+    private function renovarStock()
+    {
         foreach (Stock::all() as $stock) {
             if (!$stock->talle) {
                 $stock->delete();
@@ -68,18 +106,6 @@ class HomeController extends Controller
         $productos = Producto::where('stock', '>', '0')->get();
         foreach ($productos as $producto) {
             $producto->calcularTallesDisponibles();
-        }*/
-
-        foreach (Pedido::all() as $pedido) {
-            if (!$pedido->resumen) {
-
-                $resumenPedido                 = new ResumenPedido();
-                $resumenPedido->nombre_cliente = $pedido->client->nombre;
-                $resumenPedido->monto_total    = $pedido->monto;
-                $resumenPedido->pedido_id      = $pedido->id;
-                $resumenPedido->created_at     = $pedido->created_at;
-                $resumenPedido->save();
-            }
         }
     }
 }

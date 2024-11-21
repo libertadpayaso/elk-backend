@@ -64,8 +64,8 @@ class ProductoController extends Controller
 
 	public function imagenesJson($producto_id)
 	{        
-		$imagenes = Imagen::where('producto_id', $producto_id)->whereHas('stock', function($q) {
-            $q->where('stock', '>' , 0);
+		$imagenes = Imagen::where('producto_id', $producto_id)->whereHas('stocks', function($q) {
+            $q->where('almacen_id', Stock::WEB)->where('stock', '>' , 0);
         })->get();
 
 		return $imagenes->toJson();
@@ -89,13 +89,6 @@ class ProductoController extends Controller
 		return $talles;
 	}
 
-	public function busqueda()
-	{
-		$icono = Icono::find(5);
-		
-		return view('buscar',compact('icono'));
-	}
-	
 	public function nombres()
 	{
 		$productos = Producto::where('activado', '1')->where('stock', '>', '0')->whereHas('categoria', function ($query) {
@@ -112,8 +105,8 @@ class ProductoController extends Controller
 		$productos = Producto::where('nombre', $request->articulo)->where('activado', '1')->where('stock', '>', '0')-> get();
 
 		if(count($productos)==1){
-			$imagenes = $productos->first()->imagenes()->whereHas('stock', function ($query) {
-			    $query->where('stock', '>', '0');
+			$imagenes = $productos->first()->imagenes()->whereHas('stocks', function ($query) {
+			    $query->where('almacen_id', Stock::WEB)->where('stock', '>', '0');
 			})->pluck('imagen', 'id');
 		}
 		
@@ -123,8 +116,8 @@ class ProductoController extends Controller
 	public function detalle($id, $nombre)
 	{
 		$producto = Producto::find($id);
-		$imagenes = $producto->imagenes()->whereHas('stock', function($q) {
-			$q->where('stock', '>' , 0);
+		$imagenes = $producto->imagenes()->whereHas('stocks', function($q) {
+			$q->where('almacen_id', Stock::WEB)->where('stock', '>' , 0);
 		})->get();
 
 		return view('detalle',compact('producto', 'imagenes'));
@@ -256,31 +249,6 @@ class ProductoController extends Controller
 		return view('adm.productos.producto.edit', compact('producto', 'categorias', 'estilos', 'sexo', 'talles', 'descuentos'));
 	}
 
-	public function crearVideo($producto)
-	{
-		return view('adm.productos.video.create', compact('producto'));
-	}
-
-	public function listarVideos($producto)
-	{
-		$videos = Video::where('producto_id', $producto)->get();
-
-		return view('adm.productos.video.list',  compact('videos', 'producto'));
-	}
-
-	public function editarVideo($producto, $id)
-	{
-		$video = Video::find($id);
-		
-		return view('adm.productos.video.edit', compact('video', 'producto'));
-	}
-
-	public function editarIcono($id)
-	{
-		$icono = Icono::find($id);
-		return view('adm.productos.icono.edit', compact('icono'));
-	}
-
 	public function store(Request $request)
 	{
 		$datos = $request->all();
@@ -292,6 +260,19 @@ class ProductoController extends Controller
 		{
 			$producto->talles()->attach($datos['talle']);
 		}
+
+		$imagen = new Imagen();
+		$imagen->producto_id = $producto->id;
+		$imagen->nombre      = 'Único';
+		$imagen->codigo      = 'PDV';
+		$imagen->save();
+
+		$stock = new Stock();
+		$stock->talle_id   = Talle::TALLE_UNICO;
+		$stock->imagen_id  = $imagen->id;
+		$stock->almacen_id = Stock::PDV;
+		$stock->stock      = 0;
+		$stock->save();
 		
 		$success = 'Producto creado correctamente';
 

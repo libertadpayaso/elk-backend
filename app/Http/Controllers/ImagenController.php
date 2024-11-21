@@ -19,7 +19,7 @@ class ImagenController extends Controller
 
 	function listarImagenes($sexo, $producto)
 	{
-		$imagenes = Imagen::where('producto_id', $producto)->get();
+		$imagenes = Imagen::fromAlmacen()->where('producto_id', $producto)->get();
 		$producto = Producto::find($producto);
 		return view('adm.productos.imagen.list',  compact('imagenes', 'producto', 'sexo'));
 	}

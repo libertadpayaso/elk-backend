@@ -113,9 +113,9 @@
                         	<div id="sizes" class="pb-20">
                         		@php
 									if(session('variante')){
-										$stocks = $imagenes->find(session('variante'))->stock()->where('stock', '>', 0)->get() ;
+										$stocks = $imagenes->find(session('variante'))->stocks()->where('stock', '>', 0)->get() ;
 									}else{
-										$stocks = $imagenes->first()->stock()->where('stock', '>', 0)->get() ;
+										$stocks = $imagenes->first()->stocks()->where('stock', '>', 0)->get() ;
 									}
 									foreach (Cart::content() as $key => $fila) {
 

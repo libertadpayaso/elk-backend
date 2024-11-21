@@ -44,7 +44,7 @@
                                         	<div class="viewcontent__action single_action pt-30">
                                             	<span>
                                                     <input type="number" name="cantidad[]" placeholder="1" value="{{$row->qty}}" min="1">
-                                                    <input type="hidden" name="stock[]" value="{{$row->options->stock_id}}" max="{{ stock($row->options->stock_id)}}">
+                                                    <input type="hidden" name="stock[]" value="{{$row->options->stock_id}}" max="{{ getStock($row->options->stock_id)}}">
                                                 </span>
                                         	</div>
                                     	</td>

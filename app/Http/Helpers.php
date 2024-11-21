@@ -33,7 +33,7 @@ if (! function_exists('name')) {
 }
 
 if (! function_exists('stock')) {
-    function stock($stock_id){
+    function getStock($stock_id){
 
         $stock = \App\Stock::find($stock_id);
         return $stock->stock;
@@ -49,7 +49,7 @@ if (! function_exists('actualizarStock')) {
                 
                 $categoria = \App\Categoria::find($categoria_id);
 
-                $categoria->stock = count($categoria->stock());
+                $categoria->stock = count($categoria->productosConStock());
                 $categoria->save();
             }
 
@@ -57,7 +57,7 @@ if (! function_exists('actualizarStock')) {
                 
                 $producto = \App\Producto::find($producto_id);
 
-                $producto->stock = count($producto->stock());
+                $producto->stock = count($producto->imagenesConStock());
                 $producto->save();
             }
 
@@ -65,12 +65,12 @@ if (! function_exists('actualizarStock')) {
             
             foreach (\App\Categoria::all() as $categoria) {
 
-                $categoria->stock = count($categoria->stock());
+                $categoria->stock = count($categoria->productosConStock());
                 $categoria->save();
 
                 foreach ($categoria->productos as $producto) {
 
-                    $producto->stock = count($producto->stock());
+                    $producto->stock = count($producto->imagenesConStock());
                     $producto->save();
                 }
             }

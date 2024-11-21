@@ -25,7 +25,7 @@
 					<div class="col s12 col m4">
 						<div class="row">
 							<div class="input-field col s12">
-								<input placeholder="Producto + Variante + Talle" name="codigo" type="text" required autofocus>
+								<input placeholder="Código de Artículo" name="codigo" type="text" required autofocus>
 								<label for="codigo">Código</label>
 							</div>
 							<!--<div class="input-field col s12">
@@ -111,12 +111,8 @@
 			$("input[name=codigo]").keyup(function(event) {
 
 				var codigo = this.value.replace(/\D/g,'');
-				
-				if(codigo.length>4 && codigo.length<7){
-					this.value = codigo.substring(0, 4) + '-' + codigo.substring(4);
-				}
-				if (codigo.length>6) {
-					this.value = codigo.substring(0, 4) + '-' + codigo.substring(4, 6) + '-' + codigo.substring(6);
+
+				if (codigo.length > 3) {
 					agregar(codigo);
 				}
 			});
@@ -133,7 +129,7 @@
 
 			function agregar(codigo){
 				$.ajax({
-					url: "{{ url('admin/pdv/pedidos/agregar') }}",
+					url: "{{ url('pdv/pedidos/agregar') }}",
 					type: "POST",
 					data: { codigo: codigo , _token: "{{csrf_token()}}" }
 				}).done(function (response, textStatus, jqXHR){

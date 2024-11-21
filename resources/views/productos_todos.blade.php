@@ -258,8 +258,8 @@
                                                 <div class="product product-4">
                                                     <div class="product__thumb">
                                                         <a href="{{ url('p/'.$item->id.'/'.name($item)) }}">
-                                                            <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->stock()->first()->imagen) }}" alt="product_image">
-                                                            <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->stock()->first()->imagen) }}" alt="product_image">
+                                                            <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
+                                                            <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
                                                         </a>
                                                         @if($item->mensaje_personalizado != '')
 					                                    <div class="product__update">
@@ -329,8 +329,8 @@
                                                 <div class="product product-4">
                                                     <div class="product__thumb">
                                                         <a href="{{ url('p/'.$item->id.'/'.name($item)) }}">
-                                                            <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->stock()->first()->imagen) }}" alt="product_image">
-                                                            <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->stock()->first()->imagen) }}" alt="product_image">
+                                                            <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
+                                                            <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
                                                         </a>
                                                         @if($item->mensaje_personalizado != '')
                                                         <div class="product__update">
@@ -399,8 +399,8 @@
                                                 <div class="product product-3">
                                                     <div class="product__thumb">
                                                         <a href="{{ url('p/'.$item->id.'/'.name($item)) }}">
-                                                            <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->stock()->first()->imagen) }}" alt="product_image">
-                                                            <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->stock()->first()->imagen) }}" alt="product_image">
+                                                            <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
+                                                            <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
                                                         </a>
                                                         <!-- <div class="product__update">
                                                             <a class="#">new</a>

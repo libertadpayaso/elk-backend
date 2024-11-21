@@ -45,10 +45,10 @@ class Producto extends Model
         return $this->hasManyThrough(Stock::class, Imagen::class);
     }
 
-    public function stock($size = null)
+    public function imagenesConStock($size = null, $id_almacen = Stock::WEB)
     {
-        return $this->imagenes()->whereHas('stock', function($q) use ($size) {
-            $q->where('stock', '>' , 0);
+        return $this->imagenes()->whereHas('stocks', function($q) use ($size, $id_almacen) {
+            $q->where('almacen_id', $id_almacen)->where('stock', '>' , 0);
             if($size){
                 $q->where('talle_id', $size);
             }
@@ -57,7 +57,7 @@ class Producto extends Model
 
     public function calcularTallesDisponibles(){
         $tallesDisponibles = [];
-        foreach ($this->stock() as $imagen) {
+        foreach ($this->imagenesConStock() as $imagen) {
             foreach ($imagen->stock as $stock) {
                 if ($stock->stock > 0 && $stock->talle) {
                     $tallesDisponibles[$stock->talle->orden] = $stock->talle->talle;
@@ -75,5 +75,8 @@ class Producto extends Model
 
     public function precioConDescuento(){
         return $this->precio * (1 - $this->descuento / 100);
+    }
+    public function stockPDV(){
+        return $this->hasManyThrough(Stock::class, Imagen::class)->where('almacen_id', Stock::PDV)->first();
     }
 }

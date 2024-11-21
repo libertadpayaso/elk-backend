@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Support\Facades\Auth;
-use App\Imagen;
-use App\Producto;
-use App\Pedido;
-use App\Linea;
-use App\Stock;
-use App\Client;
-use MP;
-use Redirect;
+use App\Categoria;
 use App\Extensions\FileHelper;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Imagen;
+use App\Linea;
 use App\Mail\Comprobante;
+use App\Pedido;
+use App\Producto;
+use App\Sexo;
+use App\Stock;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class PdvController extends Controller
@@ -90,10 +89,10 @@ class PdvController extends Controller
 		
 		if (isset($error)) {
 
-			return view('adm.pdv.pedidos.carrito', compact('error'));
+			return view('pdv.pedidos.carrito', compact('error'));
 		}else{
 
-			return view('adm.pdv.pedidos.carrito');
+			return view('pdv.pedidos.carrito');
 		}
 	}
 
@@ -116,7 +115,7 @@ class PdvController extends Controller
 		$nombre     = $request->nombre;
 		$carbon     = new Carbon($pedido->created_at, env('APP_TIMEZONE'));
 		$fileHelper = new FileHelper();
-		$html       = view("adm.pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre', 'fileHelper'))->render();
+		$html       = view("pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre', 'fileHelper'))->render();
 		$filename   = $carbon->format("d-m-Y")."-".$pedido->id.'.pdf';
 		PDF::loadHTML($html)->setPaper('a5', 'portrait')->save(public_path().'/pdf/'.$filename);
 		Mail::to($request->email)->send(new Comprobante($carbon->format("d-m-Y"), $carbon->format("H:i"), $filename, $nombre));
@@ -151,12 +150,12 @@ class PdvController extends Controller
 			}
 			Cart::destroy();
 
-			return view('adm.pdv.pedidos.finalizar', compact('pedido'));
+			return view('pdv.pedidos.finalizar', compact('pedido'));
 		}
 		else
 		{
 			$error = 'Error: No hay stock disponible para completar la compra';
-			return view('adm.pdv.pedidos.finalizar', compact('error'));
+			return view('pdv.pedidos.finalizar', compact('error'));
 		}	
 	}
 
@@ -165,7 +164,7 @@ class PdvController extends Controller
 		Auth::setDefaultDriver('client');
 		$pedidos = Pedido::where('pdv', 1)->where('client_id', Auth::user()->id)->orderBy('updated_at', 'desc') ->get();
 
-		return view('adm.pdv.pedidos.lista', [
+		return view('pdv.pedidos.lista', [
 			'pedidos'   => $pedidos,
 			'estados'   => self::ESTADOS,
 			'colores'   => self::COLORES,
@@ -191,7 +190,7 @@ class PdvController extends Controller
 			}
 		}
 
-		return view('adm.pdv.pedidos.ver',  [
+		return view('pdv.pedidos.ver',  [
 			'pedido'  => $pedido,
 			'estados' => self::ESTADOS,
 			'colores' => self::COLORES
@@ -215,7 +214,7 @@ class PdvController extends Controller
 		$nombre     = null;
 		$carbon     = new Carbon($pedido->created_at, env('APP_TIMEZONE'));
 		$fileHelper = new FileHelper();
-		$html       = view("adm.pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre', 'fileHelper'))->render();
+		$html       = view("pdv.pedidos.factura", compact('resumen', 'pedido', 'carbon', 'nombre', 'fileHelper'))->render();
 		$pdf        = PDF::loadHTML($html)->setPaper('a5', 'portrait');
 		
 		return $pdf->download($carbon->format("d-m-Y")."-".$pedido->id.'.pdf');
@@ -265,5 +264,33 @@ class PdvController extends Controller
 				}
 			}
 		}
+	}
+
+	public function listarProductos($sexo_id, $stock_id = null, Request $request)
+	{
+		$sexo              = Sexo::find($sexo_id);
+		$categoria_id      = $request->categoria_id;
+		$categoria         = Categoria::find($categoria_id);
+		$stockSeleccionado = Stock::find($stock_id);
+
+		$stocks = Stock::with('imagen.producto.categoria')->whereHas('imagen.producto.categoria', function($q) use ($sexo_id, $categoria_id) {
+			$q->where('sexo_id', $sexo_id);
+			if ($categoria_id) {
+				$q->where('id', $categoria_id);
+			}
+		})->where('almacen_id', Stock::PDV)->get();
+
+		$listaCategorias = Categoria::where('sexo_id', $sexo_id)->orderBy('nombre', 'asc')->get();
+		
+		return view('pdv.stock.list',  compact('listaCategorias', 'sexo', 'categoria', 'stocks', 'stockSeleccionado'));
+	}
+
+	public function editarStock(Request $request)
+	{
+		$stock = Stock::find($request->stock_id);
+		$stock->stock = $request->cantidad;
+		$stock->save();
+
+        return back()->with('success', 'Stock actualizado');
 	}
 }

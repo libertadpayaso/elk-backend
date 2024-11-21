@@ -10,7 +10,7 @@ class Imagen extends Model
     use SoftDeletes;
     
     protected $fillable = [
-        'producto_id', 'imagen', 'pdv', 'nombre', 'codigo',
+        'producto_id', 'imagen_id', 'nombre', 'codigo',
     ];
     protected $dates = ['deleted_at'];
 
@@ -21,15 +21,15 @@ class Imagen extends Model
         return $this->belongsTo(Producto::class);
     }
 
-    public function stock()
+    public function stocks()
     {
         return $this->hasMany(Stock::class);
     }
 
-    public function hasStock()
+    public static function fromAlmacen($almacen_id = Stock::WEB)
     {
-        return $this->whereHas('stock', function($q) {
-            $q->where('stock', '>' , 0);
-        })->get();
+        return self::whereHas('stocks', function($q) use ($almacen_id) {
+            $q->where('almacen_id', $almacen_id);
+        });
     }
 }

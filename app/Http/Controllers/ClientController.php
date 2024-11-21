@@ -52,7 +52,7 @@ class ClientController extends Controller
                 Auth::setDefaultDriver('client');
                 
                 if ($client->tipo==2) {
-                    return redirect('admin/pdv/pedidos');
+                    return redirect('pdv/pedidos');
                 }elseif(session('redirect')!=null){
                     return redirect(session('redirect'));
                 }else{

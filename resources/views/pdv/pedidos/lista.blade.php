@@ -14,7 +14,7 @@
 				</div>
 				<div class="row">
 					<div class="col s12">
-						<a href="{{ url('admin/pdv/pedidos/nuevo') }}">
+						<a href="{{ url('pdv/pedidos/nuevo') }}">
 							<button class="btn waves-effect waves-light right">Nuevo
 								<i class="material-icons right">add_to_photos</i>
 							</button>

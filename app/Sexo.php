@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sexo extends Model
 {
+    protected $fillable = [
+        'nombre'
+    ];
+
     public function categorias()
     {
         return $this->hasMany(Categoria::class);
     }
 
-    public function stock()
+    public function categoriasConStock()
     {
         return $this->categorias()->whereHas('productos.imagenes.stock', function($q) {
             $q->where('stock', '>' , 0);

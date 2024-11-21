@@ -37,12 +37,12 @@
 				<div class="container hide-on-med-and-down">
 					<div class="nav-wrapper">
 						<a class="page-title">@yield('title')</a>
-						<a class="right" href="{{ url('admin/pdv/salir') }}">Cerrar sesi&oacuten</a>
+						<a class="right" href="{{ url('pdv/salir') }}">Cerrar sesi&oacuten</a>
 					</div>
 				</div>
 				<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
 				<div class="logo hide-on-large-only">
-					<a id="logo-container" href="{{ url('admin/pdv/pedidos') }}" class="brand-logo">
+					<a id="logo-container" href="{{ url('pdv/pedidos') }}" class="brand-logo">
 						<img class="responsive-img" src="{{ asset('assets/images/logo.svg') }}" style="height: 45px">
 					</a>
 				</div>
@@ -52,22 +52,32 @@
 
 			<ul id="nav-mobile" class="side-nav fixed">
 				<div class="logo hide-on-med-and-down">
-					<a id="logo-container" href="{{ url('admin/pdv/pedidos') }}" class="brand-logo">
+					<a id="logo-container" href="{{ url('pdv/pedidos') }}" class="brand-logo">
 						<img src="{{ asset('assets/img/logos/logos_1_logoN.png') }}">
 					</a>
 				</div>
 				<li class="no-padding">
 					<ul class="collapsible collapsible-accordion">
-						<li class="bold"><a class="collapsible-header waves-effect waves-admin @if($seccion=="clientes") active @endif"><i class="material-icons">assignment</i>Pedidos</a>
+						<li class="bold"><a class="collapsible-header waves-effect waves-admin @if($seccion=="stock") active @endif"><i class="material-icons">view_quilt</i>Stock</a>
 							<div class="collapsible-body">
 								<ul>
-									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('admin/pdv/pedidos/nuevo') }}">Nuevo Pedido</a></li>
-									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('admin/pdv/pedidos') }}">Listar Pedidos</a></li>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('pdv/stock/1') }}">Mujer</a></li>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('pdv/stock/2') }}">Hombre</a></li>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('pdv/stock/4') }}">Niños</a></li>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('pdv/stock/6') }}">Calzados</a></li>
+								</ul>
+							</div>
+						</li>
+						<li class="bold"><a class="collapsible-header waves-effect waves-admin @if($seccion=="pedidos") active @endif"><i class="material-icons">assignment</i>Pedidos</a>
+							<div class="collapsible-body">
+								<ul>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('pdv/pedidos/nuevo') }}">Nuevo Pedido</a></li>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('pdv/pedidos') }}">Listar Pedidos</a></li>
 								</ul>
 							</div>
 						</li>
 						<li class="bold">
-							<a class="collapsible-header waves-effect waves-admin" href="{{ url('admin/pdv/salir') }}"><i class="material-icons">backspace</i>Cerrar sesi&oacuten</a>
+							<a class="collapsible-header waves-effect waves-admin" href="{{ url('pdv/salir') }}"><i class="material-icons">backspace</i>Cerrar sesi&oacuten</a>
 						</li>
 						
 					</ul>
@@ -87,6 +97,6 @@
 				$(".button-collapse").sideNav();
 			});
 		</script>
-
+		@yield('javascript')
 	</body>
 </html>

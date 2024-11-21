@@ -23,10 +23,10 @@ class Categoria extends Model
         return $this->belongsTo(Sexo::class);
     }
 
-    public function stock()
+    public function productosConStock($id_almacen = Stock::WEB)
     {
-        return $this->productos()->whereHas('imagenes.stock', function($q) {
-            $q->where('stock', '>' , 0);
+        return $this->productos()->whereHas('imagenes.stock', function($q) use($id_almacen) {
+            $q->where('almacen_id', $id_almacen)->where('stock', '>' , 0);
         })->where('activado' , 1)->get();
     }
 

@@ -53,10 +53,6 @@
 									    {!! Form::text('',null, ['class'=>'file-path validate']) !!}
 									</div>
 								</div>
-								<div class="input-field col s6">
-									{!!Form::label('Código PDV')!!}
-									{!!Form::text('pdv',null,['class'=>'validate', 'required'])!!}
-								</div>
 							</div>
 							<div class="row">
 								<div class="col s12">

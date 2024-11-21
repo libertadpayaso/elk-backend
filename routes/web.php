@@ -72,9 +72,6 @@ Route::group(['prefix' => 'admin'], function() {
 
 	//Productos
 	Route::group(['prefix' => 'productos'], function() {
-		Route::group(['prefix' => 'icono'], function() {
-			Route::get('edit/{id}', 'ProductoController@editarIcono');
-		});
 		Route::group(['prefix' => 'categoria'], function() {
 			Route::get('create/{sexo}', 'CategoriaController@crearCategoria');
 			Route::get('edit/{sexo}', 'CategoriaController@listarCategorias');
@@ -146,34 +143,40 @@ Route::group(['prefix' => 'admin'], function() {
 		Route::get('por-cliente', 'PedidoController@pedidosClientes');
 	});
 
-	Route::group(['prefix' => 'pdv'], function() {
-
-		Route::group(['prefix' => 'cliente'], function() {
-			Route::get('create', 'ClientController@crearClient');
-			Route::get('edit', 'ClientController@listarClients');
-			Route::get('edit/{id}', 'ClientController@editarClient');
-		});
-
-		Route::group(['prefix' => 'pedidos'], function() {
-			Route::get('/', 'PdvController@listar');
-			Route::get('ver/{id}', 'PdvController@ver');
-			Route::get('descargar/{id}', 'PdvController@descargar');
-			Route::get('nuevo', function (){ return view('adm.pdv.pedidos.nuevo'); });
-			Route::post('agregar', 'PdvController@agregar');
-			Route::post('producto', 'PdvController@producto');
-			Route::post('variante', 'PdvController@variante');
-			Route::get('confirmar', 'PdvController@confirmar');
-			Route::get('/{pedido_id}', 'PdvController@listar');
-			Route::post('mail', 'PdvController@mail');
-		});
-
-		Route::get('salir', 'PdvController@logout');
-	});
-
 	//Settings
 	Route::get('settings', 'SettingController@listSettings');
 	Route::post('settings', 'SettingController@update');
 });
 
+Route::group(['prefix' => 'pdv'], function() {
+		
+	Route::group(['prefix' => 'stock'], function() {
+		Route::get('{sexo_id}', 'PdvController@listarProductos');
+		Route::get('{sexo_id}/{stock_id}', 'PdvController@listarProductos');
+		Route::post('editar', 'PdvController@editarStock');
+	});
+
+	Route::group(['prefix' => 'cliente'], function() {
+		Route::get('create', 'ClientController@crearClient');
+		Route::get('edit', 'ClientController@listarClients');
+		Route::get('edit/{id}', 'ClientController@editarClient');
+	});
+
+	Route::group(['prefix' => 'pedidos'], function() {
+		Route::get('/', 'PdvController@listar');
+		Route::get('ver/{id}', 'PdvController@ver');
+		Route::get('descargar/{id}', 'PdvController@descargar');
+		Route::get('nuevo', function (){ return view('pdv.pedidos.nuevo'); });
+		Route::post('agregar', 'PdvController@agregar');
+		Route::post('producto', 'PdvController@producto');
+		Route::post('variante', 'PdvController@variante');
+		Route::get('confirmar', 'PdvController@confirmar');
+		Route::get('/{pedido_id}', 'PdvController@listar');
+		Route::post('mail', 'PdvController@mail');
+	});
+
+	Route::get('salir', 'PdvController@logout');
+});
+
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/tarea-manual', 'HomeController@tareaManual');
+Route::get('/tarea-manual/{metodo}', 'HomeController@tareaManual');
