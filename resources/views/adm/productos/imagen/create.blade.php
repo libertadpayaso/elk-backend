@@ -44,7 +44,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="input-field file-field col s6">
+								<div class="input-field file-field col s12">
 									<div class="btn">
 									    <span>Imagen</span>
 									    {!! Form::file('imagen', ['required'=>'required']) !!}
