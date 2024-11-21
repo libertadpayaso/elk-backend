@@ -10,7 +10,7 @@ class Imagen extends Model
     use SoftDeletes;
     
     protected $fillable = [
-        'producto_id', 'imagen_id', 'nombre', 'codigo',
+        'producto_id', 'imagen_id', 'nombre', 'codigo', 'imagen'
     ];
     protected $dates = ['deleted_at'];
 
