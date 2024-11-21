@@ -25,7 +25,7 @@ class Categoria extends Model
 
     public function productosConStock($id_almacen = Stock::WEB)
     {
-        return $this->productos()->whereHas('imagenes.stock', function($q) use($id_almacen) {
+        return $this->productos()->whereHas('imagenes.stocks', function($q) use($id_almacen) {
             $q->where('almacen_id', $id_almacen)->where('stock', '>' , 0);
         })->where('activado' , 1)->get();
     }
