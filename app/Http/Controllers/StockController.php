@@ -45,7 +45,7 @@ class StockController extends Controller
 
         $imagen = Imagen::find($id);
 
-        foreach ($imagen->stock as $key => $stock) {
+        foreach ($imagen->stocks as $stock) {
 
             $stock->stock = '0';
             $stock->save();
@@ -67,7 +67,7 @@ class StockController extends Controller
 
         foreach ($producto->imagenes()->get() as $imagen) {
 
-            foreach ($imagen->stock as $key => $stock) {
+            foreach ($imagen->stocks as $stock) {
 
                 $stock->stock = '0';
                 $stock->save();

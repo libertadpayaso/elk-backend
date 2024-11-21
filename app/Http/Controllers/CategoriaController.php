@@ -64,7 +64,7 @@ class CategoriaController extends Controller
         
         foreach ($categoria->productos as $producto) {
             foreach ($producto->imagenes as $imagen) {
-                foreach ($imagen->stock as $stock) {
+                foreach ($imagen->stocks as $stock) {
                     $stock->delete();
                 }
                 $imagen->delete();

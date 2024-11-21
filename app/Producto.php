@@ -58,7 +58,8 @@ class Producto extends Model
     public function calcularTallesDisponibles(){
         $tallesDisponibles = [];
         foreach ($this->imagenesConStock() as $imagen) {
-            foreach ($imagen->stock as $stock) {
+
+            foreach ($imagen->stocks as $stock) {
                 if ($stock->stock > 0 && $stock->talle) {
                     $tallesDisponibles[$stock->talle->orden] = $stock->talle->talle;
                 }

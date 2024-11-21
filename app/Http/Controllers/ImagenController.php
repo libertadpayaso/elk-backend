@@ -70,7 +70,7 @@ class ImagenController extends Controller
 	{
 		$imagen = Imagen::find($id);
 		
-		foreach ($imagen->stock as $stock) {
+		foreach ($imagen->stocks as $stock) {
 			$stock->delete();
 		}
 
