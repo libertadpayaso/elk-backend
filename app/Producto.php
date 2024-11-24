@@ -80,4 +80,8 @@ class Producto extends Model
     public function stockPDV(){
         return $this->hasManyThrough(Stock::class, Imagen::class)->where('almacen_id', Stock::PDV)->first();
     }
+
+    public function getImagen(){
+        return $this->imagenes()->whereNotNull('imagen')->first()->imagen;
+    }
 }

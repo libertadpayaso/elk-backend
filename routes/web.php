@@ -156,6 +156,13 @@ Route::group(['prefix' => 'pdv'], function() {
 		Route::post('editar', 'PdvController@editarStock');
 	});
 
+	Route::group(['prefix' => 'carrito'], function() {
+		Route::post('producto', 'PdvController@producto');
+		Route::post('agregar', 'PdvController@agregar');
+		Route::get('borrar/{row_id}', 'PdvController@borrar');
+		Route::get('vaciar', 'PdvController@vaciar');
+	});
+
 	Route::group(['prefix' => 'cliente'], function() {
 		Route::get('create', 'ClientController@crearClient');
 		Route::get('edit', 'ClientController@listarClients');
@@ -167,9 +174,6 @@ Route::group(['prefix' => 'pdv'], function() {
 		Route::get('ver/{id}', 'PdvController@ver');
 		Route::get('descargar/{id}', 'PdvController@descargar');
 		Route::get('nuevo', function (){ return view('pdv.pedidos.nuevo'); });
-		Route::post('agregar', 'PdvController@agregar');
-		Route::post('producto', 'PdvController@producto');
-		Route::post('variante', 'PdvController@variante');
 		Route::get('confirmar', 'PdvController@confirmar');
 		Route::get('/{pedido_id}', 'PdvController@listar');
 		Route::post('mail', 'PdvController@mail');

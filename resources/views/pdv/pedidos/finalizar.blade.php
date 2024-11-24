@@ -7,7 +7,7 @@
 				<div class="row">
 					<div class="col 12 miga">
 						<p>
-							<a href="{{ url('admin/pdv/pedidos') }}">Pedidos</a> > Pedido creado
+							<a href="{{ url('pdv/pedidos') }}">Pedidos</a> > Pedido creado
 						</p>
 					</div>
 				</div>
@@ -57,7 +57,7 @@
 					var id = $('input[name=id]').val();
 					
 					$.ajax({
-						url: "{{ url('admin/pdv/pedidos/mail') }}",
+						url: "{{ url('pdv/pedidos/mail') }}",
 						type: "POST",
 						data: { id: id, 
 							email: mail,
@@ -67,13 +67,13 @@
 						
 						$('input[name=email]').val('');
 						$('input[name=nombre]').val('');
-						alert(response);
-					
+
+						Materialize.toast(response, 5000, 'red lighten-4 red-text text-darken-4');					
 					}).fail(function (jqXHR, textStatus, errorThrown){
 						console.error( "Error: "+ textStatus, errorThrown );
 					});
 				}else{
-					alert('Complete los campos Nombre y E-mail');
+					Materialize.toast('Complete los campos Nombre y E-mail', 5000, 'red lighten-4 red-text text-darken-4');
 				}
 			});
 		</script>

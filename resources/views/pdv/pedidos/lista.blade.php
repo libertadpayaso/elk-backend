@@ -52,7 +52,7 @@
 										</select>
 									</td>
 									<td >
-										<a href="{{ url('admin/pdv/pedidos/ver/'.$pedido->id) }}"><i class="material-icons">remove_red_eye</i></a>
+										<a href="{{ url('pdv/pedidos/ver/'.$pedido->id) }}"><i class="material-icons">remove_red_eye</i></a>
 									</td>
 								</tr>
 								@endforeach
@@ -96,8 +96,8 @@
 						_token: '{{ csrf_token() }}'
 					},
 				})
-				.done(function(data) {
-					$('table.responsive-table tbody tr').eq(index).css('background-color', data);
+				.done(function(response) {
+					$('table.responsive-table tbody tr').eq(index).css('background-color', response);
 				});
 			}
 

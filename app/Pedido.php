@@ -26,7 +26,7 @@ class Pedido extends Model
         0 => '#fefe8b', 
         1 => '#b4ffb4',  
         2 => '#d3cfff', 
-        3 => '#b0000c',
+        3 => '#fbb1b1',
         4 => '#7fffd4',
         5 => '#fdcb6e',
         6 => '#dfe6e9',

@@ -32,68 +32,90 @@ class PdvController extends Controller
 
 	public function producto(Request $request)
 	{
-		$producto = Producto::where('pdv', $request->codigo)->first();
-		return response()->json($producto);
-	}
-
-	public function variante(Request $request)
-	{
-		$producto = Producto::where('pdv', $request->producto)->first();
+		$codigoPdv = (int) $request->codigo;
+		$producto = Producto::where('pdv', $codigoPdv)->first();
 		
-		if (is_object($producto)) {
+		if ($producto) {
 
-			$variante = Imagen::where('pdv', $request->codigo)->where('producto_id', $producto->id)->first();
-			return response()->json($variante);
-		}else{
+			$stock = $producto->stockPDV();
+			$cartItem = Cart::search(function ($cartItem, $rowId) use ($stock) {
+				return $cartItem->id === $stock->id;
+			})->first();
 
-			return response()->json($producto);
-		}
+			if ($cartItem) {
+				$stock->stock = $stock->stock - $cartItem->qty;
+			}
+
+			$response = [
+				'status' => true,
+				'producto' => $producto,
+				'stock' => $stock
+			];
+		} else {
+			$response = [
+				'status' => false,
+				'message' => 'No se encontró el producto Codigo: ' . $codigoPdv
+			];
+		}	
+
+		return response()->json($response);
 	}
 
 	public function agregar(Request $request)
 	{ 
-		$request['producto'] = ltrim(substr($request->codigo, 0, 4), '0');
-		$request['variante'] = ltrim(substr($request->codigo, 4, 2), '0');
-		$request['talle'] = ltrim(substr($request->codigo, 6, 1), '0');
+		$stock = Stock::find($request->stock_id);
 
-		$producto = Producto::where('pdv', $request->producto)->first();
-		if ($producto!=null) {
-
-			$variante = Imagen::where('pdv', $request->variante)->where('producto_id', $producto->id)->first();
-			if ($variante!=null) {
-
-				$stock = Stock::where('imagen_id', $variante->id)->where('talle_id', $request->talle)->first();
-
-				if($stock!=null && $stock->stock > 0){
-					
-					$options = [
-						'talle' => $request->talle, 
-						'imagen' => $variante->id,
-						'producto' => $variante->producto->id,
-						'url' => $variante->producto->name()];
-					Cart::add($variante->id, $variante->producto->nombre.' ('.$variante->nombre.')', 1, $variante->producto->precio, $options);
-				}else{
-
-					$error = 'No hay stock suficiente para este producto';
-				}
-			}else{
-
-				$error = 'La variante "'.$request->variante.'" no existe';
-			}
-		}else{
-
-			$error = 'El producto "'.$request->producto.'" no existe';
+		if(!$stock){
+			return back()->with('error', 'No se encontró el producto');
 		}
 
-		$this->sanitisize();
+		$cartItem = Cart::search(function ($cartItem, $rowId) use ($stock) {
+			return $cartItem->id === $stock->id;
+		})->first();
+
+		if( $cartItem && $stock->stock < ($request->cantidad + $cartItem->qty)){
+			return back()->with('error', 'No hay stock suficiente');
+		}
+			
+		$options = [
+			'talle_id'         => $stock->talle->id, 
+			'nombre_talle'     => $stock->talle->talle, 
+			'imagen'           => $stock->imagen->id,
+			'archivo'          => $stock->imagen->imagen,
+			'producto'         => $stock->imagen->producto->id,
+			'stock_id'         => $stock->id,
+			'url'              => name($stock->imagen->producto),
+			'precio_original'  => $stock->imagen->producto->precio,
+			'precio_descuento' => $stock->imagen->producto->precioConDescuento(),
+			'precio_mayorista' => $stock->imagen->producto->precioMayorista(),
+			'es_promocion' => false
+		];
+
+		if ($stock->imagen->producto->descuento > 0) {
+			$precio = $stock->imagen->producto->precioConDescuento();
+		}else{
+			$precio = $stock->imagen->producto->precio;
+		}
+
+		Cart::add($stock->id, $stock->imagen->producto->nombre, $request->cantidad, $precio, $options);
+
+		return back()->with('success', "{$stock->imagen->producto->nombre} agregado al carrito");
+	}
+
+	public function borrar($id)
+	{
+		$eraMayorista = Cart::subtotal(0,'','') >= env("MONTO_MAYORISTA");
 		
-		if (isset($error)) {
+		Cart::remove($id);
+		$this->aplicarDescuentoMayorista($eraMayorista);
 
-			return view('pdv.pedidos.carrito', compact('error'));
-		}else{
+		return back()->with('success', 'Se eliminó el producto del Carrito');
+	}
 
-			return view('pdv.pedidos.carrito');
-		}
+	public function vaciar()
+	{
+		Cart::destroy();
+		return back()->with('success', 'Se vació el carrito carrito');
 	}
 
 	public function mail(Request $request){
@@ -125,35 +147,40 @@ class PdvController extends Controller
 
 	public function confirmar()
 	{
-		$this->sanitisize();
 		Auth::setDefaultDriver('client');
 
 		if (Cart::count()>0)
 		{
-			$pedido = new Pedido();
-			$pedido->client_id =  Auth::user()->id;
-			$pedido->pdv = 1;
-			$pedido->estado = 1;
+			$total    = Cart::subtotal(0,'','');
+			$subtotal = 0;
+			
+			$pedido               = new Pedido();
+			$pedido->client_id    =  Auth::user()->id;
+			$pedido->pdv          = 1;
+			$pedido->estado       = 1;
+			$pedido->es_mayorista = $total >= env("MONTO_MAYORISTA");
+			$pedido->monto        = $total;
+			$pedido->subtotal     = $pedido->monto;
 			$pedido->save();
+			
 			foreach (Cart::content() as $i => $row)
 			{
-
-				$linea = new Linea();
-				$linea->pedido_id = $pedido->id;
-				$linea->imagen_id = $row->options->imagen;
-				$linea->cantidad = $row->qty;
-				$linea->talle = $row->options->talle;
+				$linea                  = new Linea();
+				$linea->pedido_id       = $pedido->id;
+				$linea->imagen_id       = $row->options->imagen;
+				$linea->cantidad        = $row->qty;
+				$linea->precio          = $row->price;
+				$linea->talle_id        = $row->options->talle_id;
+				$linea->tiene_promocion = ($row->options->es_promocion) ? 1 : 0 ;
 				$linea->save();
-				$stock = Stock::where('imagen_id', $row->options->imagen)->where('talle_id', $row->options->talle)->first();
+				$stock = Stock::find($row->id);
 				$stock->stock = $stock->stock-$row->qty;
 				$stock->save();
 			}
 			Cart::destroy();
 
 			return view('pdv.pedidos.finalizar', compact('pedido'));
-		}
-		else
-		{
+		} else {
 			$error = 'Error: No hay stock disponible para completar la compra';
 			return view('pdv.pedidos.finalizar', compact('error'));
 		}	
@@ -220,52 +247,6 @@ class PdvController extends Controller
 		return $pdf->download($carbon->format("d-m-Y")."-".$pedido->id.'.pdf');
 	}
 
-	//End PDV
-	public static function sanitisize()
-	{
-
-		if (Cart::count()>0)
-		{
-			foreach (Cart::content() as $key => $row) {
-				
-				if(Imagen::find($row->options->imagen)!=null){
-
-					$imagen = Imagen::find($row->options->imagen);
-
-					if(Producto::find($imagen->producto->id)){
-
-						$stock = Stock::where('imagen_id', $row->options->imagen)->where('talle_id', $row->options->talle)->first();
-						
-						if($stock==null){
-
-							Cart::remove($row->rowId);
-						}else{
-							
-							if ($stock->stock<1) {
-								
-								Cart::remove($row->rowId);
-							}else{
-
-								if ($stock->stock-$row->qty<0) {
-
-									Cart::update($row->rowId, $stock->stock);
-								}
-							}
-						}
-					
-					}else{
-					
-						Cart::remove($row->rowId);
-					}
-				
-				}else{
-
-					Cart::remove($row->rowId);
-				}
-			}
-		}
-	}
-
 	public function listarProductos($sexo_id, $stock_id = null, Request $request)
 	{
 		$sexo              = Sexo::find($sexo_id);
@@ -292,5 +273,22 @@ class PdvController extends Controller
 		$stock->save();
 
         return back()->with('success', 'Stock actualizado');
+	}
+
+	protected function aplicarDescuentoMayorista($eraMayorista)
+	{
+		if (Cart::subtotal(0,'','') >= env("MONTO_MAYORISTA")) {
+			foreach (Cart::content() as $row) {
+				$row->price = $row->options->precio_mayorista;
+			}
+		} elseif ($eraMayorista) {
+			foreach (Cart::content() as $row) {
+				if ($row->options->precio_descuento > 0) {
+					$row->price = $row->options->precio_descuento;
+				} else {
+					$row->price = $row->options->precio_original;
+				}
+			}
+		}
 	}
 }
