@@ -118,67 +118,69 @@
 
 @section('javascript')
 		<script type="text/javascript">
-			$('select[name=estado]').change(function(event) {
-				var id = $(this).attr('pedido');
-				var estate = $(this).val();
-				var index = $('select[name=estado]').index(this);
-				if (estate==3)
-				{				
-					if(confirm('¿Seguro desea cancelar la operacion? Este es un proceso irreversible'))
+			$(document).ready(function(){
+				$('select[name=estado]').change(function(event) {
+					var id = $(this).attr('pedido');
+					var estate = $(this).val();
+					var index = $('select[name=estado]').index(this);
+					if (estate==3)
+					{				
+						if(confirm('¿Seguro desea cancelar la operacion? Este es un proceso irreversible'))
+						{
+							update(id, estate, index);
+						}
+					}
+					else
 					{
 						update(id, estate, index);
 					}
-				}
-				else
-				{
-					update(id, estate, index);
-				}
-			});
-
-			function update(id, estate, index){
-				
-				$.ajax({
-					url: '{{ url('admin/pedido') }}/'+id,
-					type: 'POST',
-					data: {
-						estado: estate,
-						_method: 'PUT',
-						_token: '{{ csrf_token() }}'
-					},
-				})
-				.done(function(data) {
-					$('table.highlight tbody tr').last().css('background-color', data);
 				});
-			}
 
-			$('button[type=submit]').click(function(event) {
-				
-				var mail = $('input[name=email]').val();
-				var nombre = $('input[name=nombre]').val();
-
-				if(mail!='' && nombre!=''){
-
-					var id = $('input[name=id]').val();
+				function update(id, estate, index){
 					
 					$.ajax({
-						url: "{{ url('pdv/pedidos/mail') }}",
-						type: "POST",
-						data: { id: id, 
-							email: mail,
-							nombre: nombre, 
-							_token: "{{csrf_token()}}" }
-					}).done(function (response, textStatus, jqXHR){
-						
-						$('input[name=email]').val('');
-						$('input[name=nombre]').val('');
-						alert(response);
-					
-					}).fail(function (jqXHR, textStatus, errorThrown){
-						console.error( "Error: "+ textStatus, errorThrown );
+						url: '{{ url('admin/pedido') }}/'+id,
+						type: 'POST',
+						data: {
+							estado: estate,
+							_method: 'PUT',
+							_token: '{{ csrf_token() }}'
+						},
+					})
+					.done(function(data) {
+						$('table.highlight tbody tr').last().css('background-color', data);
 					});
-				}else{
-					alert('Complete los campos Nombre y E-mail');
 				}
+
+				$('button[type=submit]').click(function(event) {
+					
+					var mail = $('input[name=email]').val();
+					var nombre = $('input[name=nombre]').val();
+
+					if(mail != '' && nombre != ''){
+
+						var id = $('input[name=id]').val();
+						
+						$.ajax({
+							url: "{{ url('pdv/pedidos/mail') }}",
+							type: "POST",
+							data: { id: id, 
+								email: mail,
+								nombre: nombre, 
+								_token: "{{csrf_token()}}" }
+						}).done(function (response, textStatus, jqXHR){
+							
+							$('input[name=email]').val('');
+							$('input[name=nombre]').val('');
+							Materialize.toast(response, 3000, 'green lighten-4 green-text text-darken-4');
+						
+						}).fail(function (jqXHR, textStatus, errorThrown){
+							console.error( "Error: "+ textStatus, errorThrown );
+						});
+					}else{
+						Materialize.toast('Complete los campos Nombre y E-mail', 5000, 'red lighten-4 red-text text-darken-4');
+					}
+				});
 			});
 		</script>
 @endsection
