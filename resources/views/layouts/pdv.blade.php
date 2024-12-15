@@ -77,6 +77,9 @@
 							</div>
 						</li>
 						<li class="bold">
+							<a class="collapsible-header waves-effect waves-admin" href="{{ url('pdv/movimientos') }}"><i class="material-icons">monetization_on</i>Recaudación</a>
+						</li>
+						<li class="bold">
 							<a class="collapsible-header waves-effect waves-admin" href="{{ url('pdv/salir') }}"><i class="material-icons">backspace</i>Cerrar sesi&oacuten</a>
 						</li>
 						

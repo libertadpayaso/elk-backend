@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Categoria;
 use App\Extensions\FileHelper;
-use App\Imagen;
 use App\Linea;
 use App\Mail\Comprobante;
+use App\Movimiento;
 use App\Pedido;
 use App\Producto;
 use App\Sexo;
@@ -151,17 +151,23 @@ class PdvController extends Controller
 
 		if (Cart::count()>0)
 		{
-			$total    = Cart::subtotal(0,'','');
+			$total = $subtotal = Cart::subtotal(0,'','');
 			$subtotal = 0;
 			
 			$pedido               = new Pedido();
-			$pedido->client_id    =  Auth::user()->id;
+			$pedido->client_id    = Auth::user()->id;
 			$pedido->pdv          = 1;
 			$pedido->estado       = 1;
 			$pedido->es_mayorista = $total >= env("MONTO_MAYORISTA");
-			$pedido->monto        = $total;
-			$pedido->subtotal     = $pedido->monto;
 			$pedido->save();
+
+			$movimiento             = new Movimiento();
+			$movimiento->usuario_id = Auth::user()->id;
+			$movimiento->pedido_id  = $pedido->id;
+			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
+			$movimiento->subtotal   = $subtotal;
+			$movimiento->monto      = $total;
+			$movimiento->save();
 			
 			foreach (Cart::content() as $i => $row)
 			{

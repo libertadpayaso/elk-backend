@@ -135,7 +135,7 @@
 			<tr>
 				<td colspan="2"></td>
 				<td><b>TOTAL</b></td>
-				<td><b>${{$pedido->monto}}</b></td>
+				<td><b>${{$pedido->movimiento->monto}}</b></td>
 			</tr>
 		</tfoot>
 	</table>

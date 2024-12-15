@@ -65,7 +65,7 @@
 							<td colspan="3"></td>
 							<td class="center-algn">{{ $sumas }} Prendas</td>
 							<td class="center-align">Total:</td>
-							<td class="center-align">${{ $pedido->monto }}</td>
+							<td class="center-align">${{ $pedido->movimiento->monto }}</td>
 						</tr>
 						<tr style="background-color: {{ $colores[$pedido->estado] }}">
 							<td colspan="4"></td>

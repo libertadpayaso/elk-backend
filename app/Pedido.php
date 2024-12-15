@@ -38,7 +38,7 @@ class Pedido extends Model
     ];
     
     protected $fillable = [
-        'client_id', 'fecha', 'estado', 'monto', 'subtotal', 'subtotal',
+        'client_id', 'fecha', 'estado', 'monto', 'subtotal'
     ];
     
     protected $dates = ['deleted_at'];
@@ -56,6 +56,11 @@ class Pedido extends Model
     public function resumen()
     {
         return $this->hasOne(ResumenPedido::class);
+    }
+
+    public function movimiento()
+    {
+        return $this->hasOne(Movimiento::class);
     }
 
     public function calcularMonto()

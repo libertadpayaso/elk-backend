@@ -53,12 +53,12 @@
 								<tr>
 									<td colspan="2"></td>
 									<td class="center-align">Subtotal:</td>
-									<td class="center-align"><del>${{ $pedido->subtotal }}</del></td>
+									<td class="center-align"><del>${{ $pedido->movimiento->subtotal }}</del></td>
 								</tr>
 								<tr>
 									<td colspan="2"></td>
 									<td class="center-align">Descuento:</td>
-									<td class="center-align">${{ $pedido->subtotal - $pedido->monto }}</td>
+									<td class="center-align">${{ $pedido->movimiento->subtotal - $pedido->movimiento->monto }}</td>
 								</tr>
 								@endif
 
@@ -66,7 +66,7 @@
 									<td colspan="1"></td>
 									<td class="center-align">{{ $sumas }} Prendas</td>
 									<td class="center-align">Total:</td>
-									<td class="center-align">${{ $pedido->monto }}</td>
+									<td class="center-align">${{ $pedido->movimiento->monto }}</td>
 								</tr>
 
 								<tr style="background-color: {{ $colores[$pedido->estado] }}">

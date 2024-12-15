@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Client;
+use App\Imagen;
+use App\Linea;
+use App\Movimiento;
+use App\Pedido;
 use App\Producto;
 use App\Promocion;
-use App\Imagen;
-use App\Pedido;
 use App\ResumenPedido;
-use App\Client;
-use App\Linea;
 use App\Stock;
 use App\Talle;
-use Redirect;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use MP;
+use Redirect;
 
 class CarritoController extends Controller
 {
@@ -203,8 +204,7 @@ class CarritoController extends Controller
 		
 		$this->sanitisize();
 		Auth::setDefaultDriver('client');
-		$total = Cart::subtotal(0,'','');
-		$subtotal = 0;
+		$total = $subtotal = Cart::subtotal(0,'','');
 
 		if (Cart::count() > 0)
 		{
@@ -218,8 +218,6 @@ class CarritoController extends Controller
 			}
 
 			$pedido->es_mayorista = $total >= env("MONTO_MAYORISTA");
-			$pedido->monto        = $total;
-			$pedido->subtotal     = $pedido->monto;
 			$pedido->save();
 			
 			foreach (Cart::content() as $i => $row)
@@ -247,8 +245,13 @@ class CarritoController extends Controller
             	}
 			}
 
-			$pedido->subtotal = $subtotal;
-			$pedido->save();
+			$movimiento             = new Movimiento();
+			$movimiento->usuario_id = Auth::user()->id;
+			$movimiento->pedido_id  = $pedido->id;
+			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
+			$movimiento->subtotal   = $subtotal;
+			$movimiento->monto      = $total;
+			$movimiento->save();
 
 			Cart::destroy();
 			actualizarStock($actualizar);
@@ -258,7 +261,7 @@ class CarritoController extends Controller
 	        }
 			$resumenPedido                 = new ResumenPedido();
 			$resumenPedido->nombre_cliente = $pedido->client->nombre;
-			$resumenPedido->monto_total    = $pedido->monto;
+			$resumenPedido->monto_total    = $pedido->movimiento->monto;
 			$resumenPedido->pedido_id      = $pedido->id;
 			$resumenPedido->save();
 
@@ -276,7 +279,7 @@ class CarritoController extends Controller
 		$coeficienteMP = env("COEFICIENTE_MERCADOPAGO");
 		$pedido = Pedido::find($id);
 		$pedido->mercadopago = 1;
-		$pedido->monto = $pedido->monto * $coeficienteMP;
+		$pedido->movimiento->monto = $pedido->movimiento->monto * $coeficienteMP;
 		$pedido->save();
 		foreach ($pedido->lineas as $linea) {
 			$linea->precio = $linea->precio * $coeficienteMP;

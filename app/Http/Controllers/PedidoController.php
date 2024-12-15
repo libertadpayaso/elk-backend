@@ -191,9 +191,10 @@ class PedidoController extends Controller
 	}
 
 	public function agregarPrenda(Request $request){
-		$pedido = Pedido::find($request->pedido_id);
-		$imagen = Imagen::find($request->imagen_id);
-		$talle  = Talle::find($request->talle_id);
+		$pedido     = Pedido::find($request->pedido_id);
+		$imagen     = Imagen::find($request->imagen_id);
+		$talle      = Talle::find($request->talle_id);
+		$movimiento = $pedido->movimiento;
 
 		$linea = Linea::where('pedido_id', $pedido->id)->where('imagen_id', $imagen->id)->where('talle_id', $talle->id)->first();
 		if (!$linea) {
@@ -224,11 +225,11 @@ class PedidoController extends Controller
 			$montoTotal += ($linea->precio * $linea->cantidad);
 		}
 
-		$pedido->monto = $montoTotal;
-		$pedido->save();
+		$movimiento->monto = $montoTotal;
+		$movimiento->save();
 
 		$resumenPedido = ResumenPedido::where('pedido_id', $pedido->id)->first();
-		$resumenPedido->monto_total = $pedido->monto;
+		$resumenPedido->monto_total = $movimiento->monto;
 		$resumenPedido->save();
 		
 		return back();
@@ -237,6 +238,7 @@ class PedidoController extends Controller
 	public function quitarPrenda(Request $request){
 		$linea         = Linea::find($request->linea_id);
 		$pedido        = Pedido::find($linea->pedido_id);
+		$movimiento    = $pedido->movimiento;
 		$resumenPedido = ResumenPedido::where('pedido_id', $pedido->id)->firstOrFail();
 		$stock         = Stock::where('imagen_id', $linea->imagen_id)->where('talle_id', $linea->talle_id)->firstOrFail();
 		
@@ -250,9 +252,9 @@ class PedidoController extends Controller
 		}
 
 		$stock->save();
-		$pedido->monto = $pedido->calcularMonto();
-		$pedido->save();
-		$resumenPedido->monto_total = $pedido->monto;
+		$movimiento->monto = $pedido->calcularMonto();
+		$movimiento->save();
+		$resumenPedido->monto_total = $movimiento->monto;
 		$resumenPedido->save();
 		$linea->imagen->producto->calcularTallesDisponibles();
 

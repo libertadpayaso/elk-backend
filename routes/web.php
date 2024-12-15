@@ -149,7 +149,7 @@ Route::group(['prefix' => 'admin'], function() {
 });
 
 Route::group(['prefix' => 'pdv'], function() {
-		
+	Route::resource('movimientos', 'MovimientoController');
 	Route::group(['prefix' => 'stock'], function() {
 		Route::get('{sexo_id}', 'PdvController@listarProductos');
 		Route::get('{sexo_id}/{stock_id}', 'PdvController@listarProductos');

@@ -67,7 +67,7 @@
 								<tr>
 									<td colspan="4"></td>
 									<td class="center-align">Subtotal:</td>
-									<td class="center-align">${{ $pedido->subtotal }}</td>
+									<td class="center-align">${{ $pedido->movimiento->subtotal }}</td>
 								</tr>
 								@endif
 									<td colspan="3"></td>
@@ -77,7 +77,7 @@
 									@else
 									<td class="center-align"><b>Total:</b></td>
 									@endif
-									<td class="center-align"><b>${{ $pedido->monto }}</b></td>
+									<td class="center-align"><b>${{ $pedido->movimiento->monto }}</b></td>
 								</tr>
 								<tr style="background-color: {{ $colores[$pedido->estado] }}">
 									<td colspan="4"></td>

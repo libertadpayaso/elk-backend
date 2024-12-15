@@ -89,7 +89,7 @@
 									<td colspan="2"></td>
 									<td class="center-align">{{ $sumas }} Prendas</td>
 									<td class="center-align">Total:</td>
-									<td class="center-align">${{ $pedido->monto }}</td>
+									<td class="center-align">${{ $pedido->movimiento->monto }}</td>
 								</tr>
 							</tbody>
 						</table>

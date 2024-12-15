@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Categoria;
 use App\Imagen;
+use App\Movimiento;
+use App\Pedido;
 use App\Producto;
 use App\Stock;
 use App\Talle;
@@ -46,9 +48,30 @@ class HomeController extends Controller
             case 'crearStockPDV':
                 $this->crearStockPDV();
                 break;
+            case 'crearMovimientosDesdePedido':
+                    $this->crearMovimientosDesdePedido();
+                    break;
             default:
                 echo "Nombre del Metodo incorrecto" . PHP_EOL;
                 break;
+        }
+    }
+
+    private function crearMovimientosDesdePedido()
+    {
+        foreach (Pedido::all() as $pedido) {
+
+            if ($pedido->movimiento) {
+                continue;
+            }
+
+            $movimiento             = new Movimiento();
+			$movimiento->usuario_id = $pedido->client_id;
+			$movimiento->pedido_id  = $pedido->id;
+			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
+			$movimiento->subtotal   = $pedido->subtotal;
+			$movimiento->monto      = $pedido->monto;
+			$movimiento->save();
         }
     }
 
