@@ -178,6 +178,8 @@ class CarritoController extends Controller
 			$request['password'] = 'automatico';
         	$cliente = Client::create($request->all());
 		}
+
+		$cliente->save();
 		
         return $this->confirmar($cliente->id);
 	}
@@ -246,7 +248,7 @@ class CarritoController extends Controller
 			}
 
 			$movimiento             = new Movimiento();
-			$movimiento->usuario_id = Auth::user()->id;
+			$movimiento->usuario_id = $pedido->client_id;
 			$movimiento->pedido_id  = $pedido->id;
 			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
 			$movimiento->subtotal   = $subtotal;

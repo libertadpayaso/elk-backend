@@ -65,12 +65,20 @@ class HomeController extends Controller
                 continue;
             }
 
+            $monto = 0;
+
+            foreach ($pedido->lineas as $linea) {
+                $monto += $linea->cantidad * $linea->precio;
+            }
+
             $movimiento             = new Movimiento();
 			$movimiento->usuario_id = $pedido->client_id;
 			$movimiento->pedido_id  = $pedido->id;
 			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
-			$movimiento->subtotal   = $pedido->subtotal;
-			$movimiento->monto      = $pedido->monto;
+			$movimiento->subtotal   = $monto;
+			$movimiento->monto      = $monto;
+			$movimiento->created_at = $pedido->created_at;
+			$movimiento->updated_at = $pedido->created_at;
 			$movimiento->save();
         }
     }
