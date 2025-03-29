@@ -10,23 +10,7 @@
 						<p><a href="{{ url('admin/productos/producto/edit/'.$imagen->producto->categoria->sexo_id) }}">Productos</a> >
 							<a href="{{ url('admin/productos/imagen/edit/'.$imagen->producto->categoria->sexo_id.'/'.$imagen->producto->id) }}">{{$imagen->producto->nombre}}</a> > {{$imagen->nombre}}</p>
 					</div>
-				</div>	
-				@if(count($errors) > 0)
-				<div class="col s12 card-panel red lighten-4 red-text text-darken-4">
-			  		<ul>
-			  			@foreach($errors->all() as $error)
-			  				<li>{!!$error!!}</li>
-			  			@endforeach
-			  		</ul>
-			  	</div>
-				@endif
-
-				@if(session('success'))
-				<div class="col s12 card-panel green lighten-4 green-text text-darken-4">
-					{{ session('success') }}
 				</div>
-				@endif
-
 				<form action="{{ url('admin/productos/stock') }}" method="POST">
 					<div class="row">
 						<div class="col s12">

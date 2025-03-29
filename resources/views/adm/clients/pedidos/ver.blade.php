@@ -119,7 +119,37 @@
 						</table>
 					</div>
 				</div>
+			</div>
+			<div class="container">
 				<div class="row">
+					<form method="POST" action="{{ url('admin/movimientos/' . $pedido->movimiento->id ) }}">
+						<div class="col s12">
+							<h5>Datos de Facturación</h5>
+						</div>
+						<div class="col m4 input-field">
+							<label for="costo_envio">Costo de Envío</label>
+							<input type="number" name="costo_envio" id="costo_envio" value="{{$pedido->movimiento->costo_envio}}">
+						</div>
+						<div class="col m4 input-field">
+							<select name="cuenta_facturacion" id="cuenta_facturacion">
+								<option value="">Seleccionar cuenta</option>
+								@foreach($cuentas as $key => $cuenta)
+								<option value="{{$key}}" @if($key==$pedido->movimiento->cuenta_facturacion) selected @endif>{{$cuenta}}</option>
+								@endforeach
+							</select>
+							<label>Cuenta de Facturación</label>
+						</div>
+						<div class="col m4 input-field">
+							<button class="btn teal darken-3">Actualizar</button>
+						</div>
+						<input type="hidden" name="_token" value="{{csrf_token()}}"/>
+						<input type="hidden" name="_method" value="PUT"/>
+					</form>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<h5>Acciones</h5>
+					</div>
 					<div class="col s3">
 						<a href="{{ url('admin/clientes/pedidos/agregar/' . $pedido->id) }}">
 							<button class="btn teal lighten-2">Agregar Productos</button>

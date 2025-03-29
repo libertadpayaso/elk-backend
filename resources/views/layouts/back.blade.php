@@ -139,7 +139,23 @@
 		<script src="https://use.fontawesome.com/c3d13979f5.js"></script>
 		<script type="text/javascript" src="{{ asset('adm/js/custom.js') }}"></script>
 		@yield('javascript')
+		<script type="text/javascript">
+			$(document).ready(function(){
+				@if(session('success'))
+					Materialize.toast('{{ session('success') }}', 3000, 'green lighten-4 green-text text-darken-4');
+				@endif
 	
+				@if(session('error'))
+					Materialize.toast('{{ session('error') }}', 5000, 'red lighten-4 red-text text-darken-4');
+				@endif
+
+				@if($errors && count($errors) > 0)
+				@foreach($errors->all() as $error)
+					Materialize.toast('{{ $error }}', 5000, 'red lighten-4 red-text text-darken-4');
+				@endforeach
+				@endif
+			});
+		</script>
 	</body>
 </html>
 
