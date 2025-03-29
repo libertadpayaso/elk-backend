@@ -49,7 +49,6 @@
 						</ul>
 					</div>
 				</div>
-				<!-- <button type="button" onclick="javascript:imprim2();">Imprimir</button> -->
 				<div class="row" >
 					<div class="col s12">
 						<table class="highlight bordered responsive-table" >
@@ -67,31 +66,31 @@
 							<tbody>
 								@foreach($resumenes as $resumen)
 								<tr>
-									<td >
+                                    <td>
 										# {{ $resumen->pedido_id }}
 									</td>
-									<td >
+									<td>
 										{{ $resumen->nombre_cliente }}
 									</td>
 									<td>
 										{{ $resumen->monto_total }}
 									</td>
-									<td >
+									<td>
 										@if($resumen->created_at){{ \Carbon\Carbon::parse($resumen->created_at)->format('d-m-Y') }}@endif
 									</td>
-									<td >
+									<td>
 										@if($resumen->fecha_pago){{ \Carbon\Carbon::parse($resumen->fecha_pago)->format('d-m-Y') }}@endif
 									</td>
-									<td >
+									<td>
 										@if($resumen->modo_pago && isset($modosPago[$resumen->modo_pago])) {{ $modosPago[$resumen->modo_pago] }} @endif
 									</td>
-									<td >
+									<td>
 										@if($resumen->modo_envio && isset($modosEnvio[$resumen->modo_envio])) {{ $modosEnvio[$resumen->modo_envio] }} @endif
 									</td>
-									<td >
+									<td>
 										@if($resumen->facturado == 1) Facturado @endif
 									</td>
-									<td >
+									<td>
 										<a href="{{ url('admin/clientes/pedidos/resumen/'.$resumen->id) }}" target="_blank"><i class="material-icons">remove_red_eye</i></a>
 									</td>
 								</tr>
