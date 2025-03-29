@@ -15,7 +15,7 @@ class Pedido extends Model
         2  => 'Contactado',
         3  => 'Cancelado',
         4  => 'Completo y pagado',
-        5  => 'inCompleto',
+        5  => 'Incompleto',
         6  => 'Pagado SIN ARMAR',
         7  => 'Retira y Paga en local',
         8  => 'Pagado y Retira en local',

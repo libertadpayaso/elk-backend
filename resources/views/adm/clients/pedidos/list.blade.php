@@ -73,56 +73,64 @@
 					<div class="col s12">
 						<table class="highlight bordered responsive-table" >
 							<thead >
-								<td >Fecha</td>
-								<td >Cliente</td>
-								<td >Celular</td>
-								<td >Provincia</td>
-								<td >Localidad</td>
-								<td >Dirección</td>
-								<td >Dni</td>
-								<td >Forma de pago</td>
-								<td >Forma de envío</td>
-								<td >Estado</td>
-								<td >Ver</td>
+								<td>Fecha</td>
+								<td>Cliente</td>
+								<td>Celular</td>
+								<td>Provincia</td>
+								<td>Localidad</td>
+								<td>Dirección</td>
+                                <td>CP</td>
+                                <td>Email</td>
+								<td>Dni</td>
+								<td>Forma de pago</td>
+								<td>Forma de envío</td>
+								<td>Estado</td>
+								<td>Ver</td>
 							</thead>
 							<tbody>
 								@foreach($pedidos as $pedido)
 								<tr style="background-color: {{ $colores[$pedido->estado] }}">
-									<td >
-										{{ $pedido->created_at }}
-									</td>
-									<td >
-										{{ $pedido->client->nombre }}
+									<td>
+                                        <a class="detahora" >{{ $pedido->created_at }}</a>
 									</td>
 									<td>
-										{{ $pedido->client->celular }}
+										<a class="deta" >{{ $pedido->client->nombre }}</a>
 									</td>
-									<td >
-										{{ $pedido->client->provincia }}
+									<td>
+										<a class="deta" >{{ $pedido->client->celular }}</a>
 									</td>
-									<td >
-										{{ $pedido->client->localidad }}
+									<td>
+										<a class="deta" >{{ $pedido->client->provincia }}</a>
 									</td>
-									<td >
-										{{ $pedido->client->direccion }}
+									<td>
+										<a class="deta" >{{ $pedido->client->localidad }}</a>
 									</td>
-									<td >
-										{{ $pedido->client->cuit }}
+									<td>
+										<a class="deta" >{{ $pedido->client->direccion }}</a>
 									</td>
-									<td >
-										{{ $pedido->client->formadepago }}
+                                    <td>
+										<a class="deta" >{{ $pedido->client->codigo_postal }}</a>
 									</td>
-									<td >
-										{{ $pedido->client->formadeenvio }}
+                                    <td>
+										<a class="deta" >{{ $pedido->client->email }}</a>
 									</td>
-									<td >
-										<select name="estado" pedido="{{ $pedido->id }}" @if($pedido->estado==3) disabled @endif>
+									<td>
+										<a class="deta" >{{ $pedido->client->cuit }}</a>
+									</td>
+									<td>
+										<a class="deta" >{{ $pedido->client->formadepago }}</a>
+									</td>
+									<td>
+										<a class="deta" >{{ $pedido->client->formadeenvio }}</a>
+									</td>
+									<td>
+										<a class="detahora" ><select name="estado" pedido="{{ $pedido->id }}" @if($pedido->estado==3) disabled @endif>
 											@foreach($estados as $key => $estado)
 											<option value="{{$key}}" @if($key==$pedido->estado) selected @endif>{{$estado}}</option>
 											@endforeach
-										</select>
+										</select></a>
 									</td>
-									<td >
+									<td>
 										<a href="{{ url('admin/clientes/pedidos/ver/'.$pedido->id) }}"><i class="material-icons">remove_red_eye</i></a>
 									</td>
 								</tr>

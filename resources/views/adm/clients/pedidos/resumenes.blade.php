@@ -54,8 +54,8 @@
 					<div class="col s12">
 						<table class="highlight bordered responsive-table" >
 							<thead >
+                                <td>Pedido</td>
 								<td>Cliente</td>
-								<td>Pedido</td>
 								<td>Monto Total</td>
 								<td>Fecha de Alta</td>
 								<td>Fecha de Pago</td>
@@ -68,10 +68,10 @@
 								@foreach($resumenes as $resumen)
 								<tr>
 									<td >
-										{{ $resumen->nombre_cliente }}
+										# {{ $resumen->pedido_id }}
 									</td>
 									<td >
-										# {{ $resumen->pedido_id }}
+										{{ $resumen->nombre_cliente }}
 									</td>
 									<td>
 										{{ $resumen->monto_total }}

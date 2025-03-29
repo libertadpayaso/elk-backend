@@ -155,7 +155,7 @@ class PedidoController extends Controller
 			setlocale(LC_MONETARY, 'es_AR');
 			$estadisticas[$key]["mes"] = $key;
 			$estadisticas[$key]["cantidad"] = count($pedidos);
-			$estadisticas[$key]["monto"] = money_format('%.0n', $pedidos->sum('monto'));
+			$estadisticas[$key]["monto"] = $pedidos->sum('monto');
 		}
 		      
 		return view('adm.estadisticas.pedidos.pormes',  compact('estadisticas'));

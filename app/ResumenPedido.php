@@ -21,7 +21,8 @@ class ResumenPedido extends Model
         3 => 'Pago en el Local', 
         4 => 'Pago en BancoLei',
         5 => 'MP EZE',
-        6 => 'Pago en BancoMama'
+        6 => 'Pago en BancoMama',
+        7 => 'Bco PROV EZE'
         
         
     ];

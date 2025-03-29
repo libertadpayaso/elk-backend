@@ -8,7 +8,7 @@
  
 @section('main')
 		<main>
-			<div class="container">
+			<div class="container-fluid">
 				<div class="row">
 					<div class="col 12 miga">
 						<p>
@@ -17,16 +17,20 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col s12">
-						<h5>De: {{$pedido->client->nombre }}</h5>
+                    
+					<div class="input-field col s12">
+                        <div>
+                            <a class="detanombre" >De: {{$pedido->client->nombre }}</a>
 						@if($pedido->mercadopago==1)
 						<p>Cobrado con Mercado Pago</p>
 						@endif
-					</div>
-					<div class="col s12">
-						<a class="btn right red darken-4" href="{{ url('admin/clientes/pedidos/descargar/'.$pedido->id) }}">Descargar</a>
-					</div>
-					<div class="input-field col s12">
+                            </div>
+                        <div>
+                            <a class="detanombre2" >Forma de pago: {{ $pedido->client->formadepago }}</a>
+                        </div>
+                        <div>
+                            <a class="detanombre2" >Forma de pago: {{ $pedido->client->formadeenvio }}</a>
+                        </div>
 						<table class="highlight bordered">
 							<thead>
 								<tr>
@@ -40,21 +44,32 @@
 									<th></th>
 								</tr>
 							</thead>
-							<tbody>
-								
+							<tbody>								
 								@foreach($pedido->lineas as $linea)
 								<tr>
-									<td><img class="responsive-img materialboxed" src="{{ asset('assets/img/imagenes/'.$linea->imagen->imagen) }}"></td>
-									<td>{{$linea->imagen->producto->nombre}}</td>
-									<td class="center-align">{{$linea->talle->talle}}</td>
-									<td class="center-align">{{$linea->cantidad}}</td>
-									<td>{{$linea->imagen->nombre}}</td>
+									<td>
+                                        <img class="responsive-img materialboxed" src="{{ asset('assets/img/imagenes/'.$linea->imagen->imagen) }}">
+                                    </td>
+                                    <td>
+                                        <a class="deta" >{{$linea->imagen->producto->nombre}}</a>
+                                    </td>
+                                    <td class="center-align">
+                                        <a class="deta" >{{$linea->talle->talle}}</a>
+                                    </td>
+                                    <td class="center-align">
+                                        <a class="deta" >{{$linea->cantidad}}</a>
+                                    </td>
+                                    <td>
+                                        <a class="deta" >{{$linea->imagen->nombre}}</a>
+                                    </td>
 									
 									@php
 										$sumas+=$linea->cantidad;
 									@endphp
 
-									<td class="center-align">${{$linea->precio*$linea->cantidad}} @if($linea->tiene_promocion == 1) (Precio Promoción)@endif</td>
+                                    <td class="center-align">
+                                        <a class="deta" >${{$linea->precio*$linea->cantidad}} @if($linea->tiene_promocion == 1) (Precio Promoción)@endif</a>
+                                    </td>
 									<td>
 										<a class="modal-trigger" href="#modal" id-linea="{{ $linea->id }}">
 											<i class="material-icons red-text">cancel</i>
@@ -71,17 +86,27 @@
 								</tr>
 								@endif
 									<td colspan="3"></td>
-									<td class="center-align">{{ $sumas }} Prendas</td>
+									<td class="center-align">
+                                        <a class="deta">{{ $sumas }} Prendas</a>
+                                    </td>
 									@if($pedido->es_mayorista)
-									<td class="center-align"><b>Total (Mayorista):</b></td>
+									<td class="center-align">
+                                        <a class="deta">Total (Mayorista):</a>
+                                    </td>
 									@else
-									<td class="center-align"><b>Total:</b></td>
+									<td class="center-align">
+                                        <a class="deta">Total:</a>
+                                    </td>
 									@endif
-									<td class="center-align"><b>${{ $pedido->movimiento->monto }}</b></td>
+									<td class="center-align">
+                                        <a class="deta">${{ $pedido->movimiento->monto }}</a>
+                                    </td>
 								</tr>
 								<tr style="background-color: {{ $colores[$pedido->estado] }}">
 									<td colspan="4"></td>
-									<td class="center-align">Estado:</td>
+									<td class="center-align">
+                                        <a class="deta">Estado:</a>
+                                    </td>
 									<td>
 										<select name="estado" pedido="{{ $pedido->id }}" @if($pedido->estado==3) disabled @endif>
 											@foreach($estados as $key => $estado)
@@ -95,10 +120,15 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col s12">
+					<div class="col s3">
 						<a href="{{ url('admin/clientes/pedidos/agregar/' . $pedido->id) }}">
 							<button class="btn teal lighten-2">Agregar Productos</button>
 						</a>
+                    </div>
+                    <div class="col s3">
+						<a class="btn right red darken-4" href="{{ url('admin/clientes/pedidos/descargar/'.$pedido->id) }}">Descargar</a>
+					</div>
+                    <div class="col s3">
 						<a href="{{ url('admin/clientes/pedidos') }}">
 							<button class="btn right">Volver atras</button>
 						</a>

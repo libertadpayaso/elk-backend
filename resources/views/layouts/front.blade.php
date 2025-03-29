@@ -21,7 +21,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>@yield('title') | Elk | Sitio Oficial</title>
+        <title>Ropa deportiva Elk | @yield('title') </title>
         <meta name="description" content="Bienvenido al sitio oficial de indumentaria deportiva ELK®. ¡Somos fabricantes! Encontrá calzas, buzos, remeras, camperas, térmica... ¡Conoce más!">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -73,41 +73,40 @@
         <div class="gota_top bg-soft d-none d-sm-block">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col">
                         
                         <div class="gota_lang">
                             <ul>
-                                <li><a class="gotatop2">Catalogo<i class="fal fa-chevron-down"></i></a>
-                                    <ul class="additional_dropdown">
-                                        @foreach($categorias_menu as $id_categoria => $item_menu)
-                                        <li>
-                                            <a class="gotatop3" href="{{ url('productos?') . http_build_query(['category' => $id_categoria]) }}">
-                                                {{ $item_menu['nombre'] }}
-                                            </a>
-                                        </li>
-                                        @endforeach
-                                    </ul>
+                                <li>
+                                    <a href="{{ url('catalogo')}}">Catalogo<i class="fal fa-chevron-right"></i></a>
                                 </li>
                                 <li>
                                     <a href="{{ url('catalogo/lista-de-precios') }}">Lista de precios<i class="fal fa-chevron-right"></i></a>
                                 </li>
-                                <li><a href="https://api.whatsapp.com/send?phone=5491130638568"><i class="fab fa-whatsapp fa-lg"></i></a></li>
-                                <li><a href="https://www.facebook.com/elkideasdeportivas"><i class="fab fa-facebook-f fa-lg"></i></a></li>
-                                <li><a href="https://www.instagram.com/elkideasdeportivas"><i class="fab fa-instagram fa-lg "></i></a></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-sm-6 text-end">
+                    <div class="col">
+                        <div class="gota_lang">
+                            <ul>
+                                <li >
+                                    <a href="https://api.whatsapp.com/send?phone=5491130638568"><i class="fab fa-whatsapp fa-lg"></i></a>
+                                </li>
+                                <li >
+                                    <a href="https://www.facebook.com/elkideasdeportivas"><i class="fab fa-facebook-f fa-lg"></i></a>
+                                </li>
+                                <li >
+                                    <a href="https://www.instagram.com/elkideasdeportivas"><i class="fab fa-instagram fa-lg "></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col">
                         <div class="gota_right">
                             <ul>
                                 @if(!Auth::check())
                                 <li><a href="{{ url('iniciar') }}">Iniciar sesión</a></li>
-                                <li><a href="{{ url('registrarse') }}">Registrarse</a></li>
-                                
-                                
-                                
-                                
-                                
+                                <li><a href="{{ url('registrarse') }}">Registrarse</a></li>                           
                                 @else
                                 <li><a href="{{ url('perfil') }}">Mi cuenta</a></li>
                                 <li><a href="{{ url('logout') }}">Cerrar sesión</a></li>
@@ -126,10 +125,7 @@
                     <div class="col-xl-8 col-lg-8 col-md-4 col-sm-4">
                         
                         <div class="sidemenu sidemenu-1 d-lg-none d-md-block">
-                            
-                            <a href="https://api.whatsapp.com/send?phone=5491130638568"><i class="fab fa-whatsapp" style="margin: 10px;"></i></a>                            
                             <a class="open" href="#"><i class="fal fa-bars"></i></a>
-                            
                         </div>
                         <div class="main-menu">
                             <nav id="mobile-menu">
