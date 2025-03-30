@@ -61,6 +61,13 @@
 							<td class="center-align">${{$linea->precio*$linea->cantidad}}</td>
 						</tr>
 						@endforeach
+						@if($pedido->movimiento->costo_envio > 0)
+						<tr>
+							<td colspan="4"></td>
+							<td class="center-align">Envio:</td>
+							<td class="center-align">${{ $pedido->movimiento->costo_envio }}</td>
+						</tr>
+						@endif
 						<tr>
 							<td colspan="3"></td>
 							<td class="center-algn">{{ $sumas }} Prendas</td>

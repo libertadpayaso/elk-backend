@@ -152,7 +152,6 @@ class PdvController extends Controller
 		if (Cart::count()>0)
 		{
 			$total = $subtotal = Cart::subtotal(0,'','');
-			$subtotal = 0;
 			
 			$pedido               = new Pedido();
 			$pedido->client_id    = Auth::user()->id;
@@ -166,6 +165,7 @@ class PdvController extends Controller
 			$movimiento->pedido_id  = $pedido->id;
 			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
 			$movimiento->subtotal   = $subtotal;
+			$movimiento->descuento  = $subtotal - $total;
 			$movimiento->monto      = $total;
 			$movimiento->save();
 			

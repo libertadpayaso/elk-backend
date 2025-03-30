@@ -82,23 +82,23 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="datos" colspan="4"><b>Para:</b> {{$pedido->client->nombre}}</td>
+				<td class="datos" colspan="4"><b>Para:</b> {{ $pedido->client->nombre }}</td>
 			</tr>
 
 			<tr>
-				<td class="datos" colspan="2"><b>Provincia:</b> {{$pedido->client->provincia}}</td>
-				<td class="datos" colspan="2"><b>Localidad:</b> {{$pedido->client->localidad}}</td>
+				<td class="datos" colspan="2"><b>Provincia:</b> {{ $pedido->client->provincia }}</td>
+				<td class="datos" colspan="2"><b>Localidad:</b> {{ $pedido->client->localidad }}</td>
 			</tr>
 			<tr>
-				<td class="datos" colspan="4"><b>Dirección:</b> {{$pedido->client->direccion}}</td>
+				<td class="datos" colspan="4"><b>Dirección:</b> {{ $pedido->client->direccion }}</td>
 			</tr>
 			<tr>
-				<td class="datos" colspan="2"><b>Dni/Cuit:</b> {{$pedido->client->cuit}}</td>
-				<td class="datos" colspan="2"><b>Cel:</b> {{$pedido->client->celular}}</td>
+				<td class="datos" colspan="2"><b>Dni/Cuit:</b> {{ $pedido->client->cuit }}</td>
+				<td class="datos" colspan="2"><b>Cel:</b> {{ $pedido->client->celular }}</td>
 			</tr>
 			<tr>
-				<td class="datos" colspan="2"><b>Forma de Pago:</b> {{$pedido->client->formadepago}}</td>
-				<td class="datos" colspan="2"><b>Forma de Envio:</b> {{$pedido->client->formadeenvio}}</td>
+				<td class="datos" colspan="2"><b>Forma de Pago:</b> {{ $pedido->client->formadepago }}</td>
+				<td class="datos" colspan="2"><b>Forma de Envio:</b> {{ $pedido->client->formadeenvio }}</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -114,10 +114,10 @@
 					$subtotal = $linea['cantidad']*$linea['precio'];
 					$total += $subtotal;
 				@endphp
-				<td>{{$linea['cantidad']}}</td>
-				<td>{{$linea['nombre']}}</td>
-				<td>${{$linea['precio']}}</td>
-				<td>${{$subtotal}}</td>
+				<td>{{ $linea['cantidad'] }}</td>
+				<td>{{ $linea['nombre'] }}</td>
+				<td>${{ $linea['precio'] }}</td>
+				<td>${{ $subtotal }}</td>
 			</tr>
 			@endforeach
 			@if(count($resumen) < $cantidadLineas)
@@ -133,9 +133,14 @@
 		</tbody>
 		<tfoot>
 			<tr>
+				@if($pedido->movimiento->costo_envio > 0)
+				<td>Costo de Envío</td>
+				<td>${{ $pedido->movimiento->costo_envio }}</td>
+				@else
 				<td colspan="2"></td>
+				@endif
 				<td><b>TOTAL</b></td>
-				<td><b>${{$pedido->movimiento->monto}}</b></td>
+				<td><b>${{ $pedido->movimiento->monto }}</b></td>
 			</tr>
 		</tfoot>
 	</table>

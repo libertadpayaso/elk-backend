@@ -9,7 +9,6 @@ use App\Pedido;
 use App\Producto;
 use App\Stock;
 use App\Talle;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -41,19 +40,11 @@ class HomeController extends Controller
     public function tareaManual($nombreMetodo = null){
         set_time_limit(600);
 
-        switch ($nombreMetodo) {
-            case 'renovarStock':
-                $this->renovarStock();
-                break;
-            case 'crearStockPDV':
-                $this->crearStockPDV();
-                break;
-            case 'crearMovimientosDesdePedido':
-                    $this->crearMovimientosDesdePedido();
-                    break;
-            default:
-                echo "Nombre del Metodo incorrecto" . PHP_EOL;
-                break;
+        if (method_exists($this, $nombreMetodo)) {
+            $this->$nombreMetodo();
+            echo "Se ejecutó el método $nombreMetodo correctamente" . PHP_EOL;
+        } else {
+            echo "Nombre del Metodo incorrecto" . PHP_EOL;
         }
     }
 
@@ -137,6 +128,20 @@ class HomeController extends Controller
         $productos = Producto::where('stock', '>', '0')->get();
         foreach ($productos as $producto) {
             $producto->calcularTallesDisponibles();
+        }
+    }
+
+    private function calcularDescuentos()
+    {
+        $movimientos = Movimiento::where('descuento', 0)->get();
+        foreach ($movimientos as $movimiento) {
+
+            if ($movimiento->monto == $movimiento->subtotal) {
+                continue;
+            }
+
+            $movimiento->descuento = $movimiento->subtotal - $movimiento->monto;
+            $movimiento->save();
         }
     }
 }

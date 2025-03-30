@@ -252,6 +252,7 @@ class CarritoController extends Controller
 			$movimiento->pedido_id  = $pedido->id;
 			$movimiento->concepto   = "Cobro por Pedido # " . $pedido->id;
 			$movimiento->subtotal   = $subtotal;
+			$movimiento->descuento  = $subtotal - $total;
 			$movimiento->monto      = $total;
 			$movimiento->save();
 

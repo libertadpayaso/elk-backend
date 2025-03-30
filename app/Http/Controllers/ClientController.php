@@ -18,7 +18,7 @@ class ClientController extends Controller
         Auth::setDefaultDriver('client');
         if (Auth::check()) {
             return view('perfil', [
-                'pedidos' => Pedido::where('client_id', Auth::user()->id)->get(), 
+                'pedidos' => Pedido::where('client_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get(), 
                 'estados' => Pedido::ESTADOS_PEDIDO, 
                 'colores' => Pedido::COLORES_ESTADO
             ]);

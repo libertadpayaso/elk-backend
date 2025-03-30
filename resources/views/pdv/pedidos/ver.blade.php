@@ -1,5 +1,4 @@
 @php
-	$subtotal = 0;
 	$sumas = 0;
 @endphp
 @extends('layouts.pdv')
@@ -41,8 +40,7 @@
 									
 									@php
 										$precio = $linea->imagen->producto->precio;
-										$subtotal += $precio * $linea->cantidad;
-										$sumas    += $linea->cantidad;
+										$sumas  += $linea->cantidad;
 									@endphp
 
 									<td class="center-align">${{$precio*$linea->cantidad}}</td>
@@ -58,7 +56,7 @@
 								<tr>
 									<td colspan="2"></td>
 									<td class="center-align">Descuento:</td>
-									<td class="center-align">${{ $pedido->movimiento->subtotal - $pedido->movimiento->monto }}</td>
+									<td class="center-align">${{ $pedido->movimiento->descuento }}</td>
 								</tr>
 								@endif
 

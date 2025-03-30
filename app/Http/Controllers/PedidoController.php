@@ -11,6 +11,7 @@ use App\Linea;
 use App\Client;
 use App\Producto;
 use App\Extensions\FileHelper;
+use App\Movimiento;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -89,7 +90,8 @@ class PedidoController extends Controller
 		return view('adm.clients.pedidos.ver', [
 			'pedido'  => $pedido, 
 			'estados' => Pedido::ESTADOS_PEDIDO, 
-			'colores' => Pedido::COLORES_ESTADO
+			'colores' => Pedido::COLORES_ESTADO,
+			'cuentas' => Movimiento::CUENTAS,
 		]);
 	}
 

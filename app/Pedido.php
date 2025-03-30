@@ -38,7 +38,7 @@ class Pedido extends Model
     ];
     
     protected $fillable = [
-        'client_id', 'fecha', 'estado', 'monto', 'subtotal'
+        'client_id', 'fecha', 'estado'
     ];
     
     protected $dates = ['deleted_at'];

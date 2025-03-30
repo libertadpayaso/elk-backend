@@ -64,6 +64,7 @@ Route::group(['prefix' => 'admin'], function() {
     Route::resource('categoria', 'CategoriaController');
     Route::resource('stock', 'StockController');
     Route::resource('promocion', 'PromocionController');
+	Route::resource('movimientos', 'MovimientoController');
 
     Route::get('/', function (){ return view('adm.login'); });
     Route::get('panel', 'UserController@index');
@@ -149,7 +150,7 @@ Route::group(['prefix' => 'admin'], function() {
 });
 
 Route::group(['prefix' => 'pdv'], function() {
-	Route::resource('movimientos', 'MovimientoController');
+	Route::resource('movimientos', 'MovimientoPDVController');
 	Route::group(['prefix' => 'stock'], function() {
 		Route::get('{sexo_id}', 'PdvController@listarProductos');
 		Route::get('{sexo_id}/{stock_id}', 'PdvController@listarProductos');
