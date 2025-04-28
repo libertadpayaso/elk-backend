@@ -144,4 +144,9 @@ class HomeController extends Controller
             $movimiento->save();
         }
     }
+
+    private function version()
+    {
+        phpinfo();
+    }
 }

@@ -278,8 +278,8 @@
                                                     <img class="product-secondary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
                                                 </a>
                                                 @if($item->mensaje_personalizado != '')
-                                                <div class="product__update">
-                                                    <a class="lightblueclr" href="#">{{$item->mensaje_personalizado}}</a>
+                                                <div class="product__update2">
+                                                    <a class="curvas2" href="#">{{$item->mensaje_personalizado}}</a>
                                                 </div>
                                                 @elseif($item->descuento > 0 && !$item->tienePromocion())
                                                 <div class="product__update">
@@ -291,35 +291,32 @@
                                                 </div>
                                                 @endif
                                                 <div class="product-info mb-10">
+                                                    <div>
+                                                        <h4><a class="resaltarprinc" href="{{ url('p/'.$item->id.'/'.name($item)) }}">{{$item->nombre}}</a></h4>
+                                                    </div>
                                                     <div class="product_category">
                                                         <p class="description">{{ $item->categoria->nombre }}</p>
                                                     </div>
-                                                    <div>
-                                                        <h4><a class="resaltar" href="{{ url('p/'.$item->id.'/'.name($item)) }}">{{$item->nombre}}</a></h4>
-                                                    </div>
+                                                    @if($item->talles_disponibles)
+                                                    <p class="tallesdisp">Talles:  {{$item->talles_disponibles}}</p>
+                                                    @endif
                                                 </div>
-                                                <div class="product-info mb-10">
-                                                    <div class="product_category">
+                                            </div>
+                                            <div class="product-info mb-10">
+                                                <div class="product_category">                                                        
+                                                    <p class="description">{{$item->descripcion}}</p>
                                                         
-                                                        <p class="description">{{$item->descripcion}}</p>
-                                                        
-                                                        @if($item->talles_disponibles)
-                                                        <p class="tallesdisp">Talles disponibles: <br> {{$item->talles_disponibles}}</p>
-                                                        @endif                                                                
-                                                        
-                                                        
-                                                        <div class="product__name">
-                                                            <div class="pro-priceelk">
-                                                                <p class="widget-title mb-10">
-                                                            @if($item->descuento > 0 && !$item->tienePromocion())
-                                                            <strike class="precioviejo">${{$item->precio}}</strike> -
-                                                            @endif
-                                                                </p>
-                                                            </div>
+                                                    <div class="product__name">
+                                                        <div class="pro-priceelk">
+                                                            <p class="widget-title mb-10">
+                                                                @if($item->descuento > 0 && !$item->tienePromocion())
+                                                                <strike class="precioviejo">${{$item->precio}}</strike> -
+                                                                @endif
+                                                                ${{$item->precioConDescuento()}}
+                                                            </p>
                                                         </div>
-                                                        
                                                     </div>
-                                                </div>                                                        
+                                                </div>                                                       
                                                 <div class="product__action">
                                                     <div class="inner__action">
                                                         <div class="view" prod-id="{{$item->id}}">
@@ -360,26 +357,29 @@
                                                 </div>
                                                 @endif
                                                 <div class="product-info mb-10">
+                                                    <div>
+                                                        <h4><a class="resaltarprinc" href="{{ url('p/'.$item->id.'/'.name($item)) }}">{{$item->nombre}}</a></h4>
+                                                    </div>
                                                     <div class="product_category">
                                                         <p class="description">{{ $item->categoria->nombre }}</p>
                                                     </div>
-                                                    <div>
-                                                        <h4><a class="resaltar" href="{{ url('p/'.$item->id.'/'.name($item)) }}">{{$item->nombre}}</a></h4>
-                                                    </div>
+                                                    @if($item->talles_disponibles)
+                                                    <p class="tallesdisp">Talles:  {{$item->talles_disponibles}}</p>
+                                                    @endif
                                                 </div>
+                                            </div>
                                                 <div class="product-info mb-10">
                                                     <div class="product_category">
                                                         <p class="description">{{$item->descripcion}}</p>
-                                                        @if($item->talles_disponibles)
-                                                        <p class="tallesdisp">Talles disponibles: <br> {{$item->talles_disponibles}}</p>
-                                                        @endif
-                                                        <div class="product__name">
-                                                            <div class="pro-priceelk">
-                                                                <p class="widget-title mb-10">
-                                                            @if($item->descuento > 0 && !$item->tienePromocion())
-                                                            <strike class="precioviejo">${{$item->precio}}</strike> -
-                                                            @endif
-                                                                </p>
+                                                            <div class="product__name">
+                                                                <div class="pro-priceelk">
+                                                                    <p class="widget-title mb-10">
+                                                                        @if($item->descuento > 0 && !$item->tienePromocion())
+                                                                        <strike class="precioviejo">${{$item->precio}}</strike> -
+                                                                        @endif
+                                                                        ${{$item->precioConDescuento()}}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         
@@ -389,8 +389,6 @@
                                                     <div class="inner__action">
                                                         <div class="view" prod-id="{{$item->id}}">
                                                             <a href="javascript:void(0)"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -404,7 +402,7 @@
                                 <div class="row">
                                     @foreach($productos as $item)
                                     <div class="col-xl-2">
-                                        <div class="product product-3">
+                                        <div class="product product-4">
                                             <div class="product__thumb">
                                                 <a href="{{ url('p/'.$item->id.'/'.name($item)) }}">
                                                     <img class="product-primary" src="{{ asset('assets/img/imagenes/'.$item->imagenesConStock()->first()->imagen) }}" alt="product_image">
@@ -424,32 +422,28 @@
                                                 </div>
                                                 @endif
                                                 <div class="product-info mb-10">
-                                                    <div class="product_category">
-                                                        
-                                                        <p class="description">{{ $item->categoria->nombre }}</p>
-                                                    </div>
                                                     <div>
-                                                        <h4><a class="resaltar" href="{{ url('p/'.$item->id.'/'.name($item)) }}">{{$item->nombre}}</a></h4>
+                                                        <h4><a class="resaltarprinc" href="{{ url('p/'.$item->id.'/'.name($item)) }}">{{$item->nombre}}</a></h4>
                                                     </div>
+                                                    @if($item->talles_disponibles)
+                                                    <p class="tallesdisp">Talles:  {{$item->talles_disponibles}}</p>
+                                                    @endif
                                                 </div>
-                                                <div class="product-info mb-10">
-                                                    <div class="product_category">
-                                                        <p class="description">{{$item->descripcion}}</p>
-                                                        @if($item->talles_disponibles)
-                                                        <p class="tallesdisp">Talles disponibles: <br> {{$item->talles_disponibles}}</p>
-                                                        @endif
-                                                        <div class="product__name">
-                                                            <div class="pro-priceelk">
-                                                                <p class="widget-title mb-10">
-                                                            @if($item->descuento > 0 && !$item->tienePromocion())
-                                                            <strike class="precioviejo">${{$item->precio}}</strike> -
-                                                            @endif
-                                                                </p>
-                                                            </div>
+                                            </div>
+                                            <div class="product-info mb-10">
+                                                <div class="product_category">
+                                                    <p class="description">{{$item->descripcion}}</p>
+                                                    <div class="product__name">
+                                                        <div class="pro-priceelk">
+                                                            <p class="widget-title mb-10">
+                                                                @if($item->descuento > 0 && !$item->tienePromocion())
+                                                                <strike class="precioviejo">${{$item->precio}}</strike> -
+                                                                @endif
+                                                                ${{$item->precioConDescuento()}}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
                                                 <div class="product__action">
                                                     <div class="inner__action">
                                                         <div class="view" prod-id="{{$item->id}}">
@@ -458,9 +452,18 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                                <div class="product__action">
+                                                    <div class="inner__action">
+                                                        <div class="view" prod-id="{{$item->id}}">
+                                                            <a href="javascript:void(0)"><i class="fal fa-eye"></i></a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
                                     @endforeach
+                                    </div>
                                 </div>
                             </div>
                             @if( $paginas > 1)

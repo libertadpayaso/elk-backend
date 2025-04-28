@@ -9,9 +9,9 @@ class Movimiento extends Model
     const TIPO_PEDIDO = 'PED';
     const TIPO_MANUAL = 'MAN';
     const CUENTAS = [
-        1 => 'Cuenta 1',
-        2 => 'Cuenta 2',
-        3 => 'Cuenta 3'
+        1 => 'Roberto',
+        2 => 'Mirtha',
+        3 => 'Ezequiel'
     ];
 
     protected $fillable = [
