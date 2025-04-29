@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Pedido;
-use App\ResumenPedido;
-use App\Imagen;
-use App\Talle;
-use App\Stock;
-use App\Linea;
 use App\Client;
-use App\Producto;
+use App\Exports\FacturacionExport;
 use App\Extensions\FileHelper;
+use App\Imagen;
+use App\Linea;
 use App\Movimiento;
-use Illuminate\Http\Request;
+use App\Pedido;
+use App\Producto;
+use App\ResumenPedido;
+use App\Stock;
+use App\Talle;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PedidoController extends Controller
 {
@@ -261,5 +264,56 @@ class PedidoController extends Controller
 		$linea->imagen->producto->calcularTallesDisponibles();
 
 		return $this->verPedido($linea->pedido->id);
+	}
+
+	public function listarParaFacturacion(Request $request){
+
+		$periodos = DB::table('pedidos')
+		->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as periodo")
+		->whereNull('deleted_at')
+		->groupBy('periodo')
+		->orderBy('periodo', 'DESC')
+		->get();
+
+		$parametros = [];
+
+		if ($request->periodo) {
+			$periodo = $request->periodo;
+		} else {
+			$periodo =  $periodos->first()->periodo;
+		}
+
+		$parametros['periodo_actual'] = $periodo;
+		$periodo = explode('-', $periodo);
+		
+		$query = Pedido::whereYear('created_at', $periodo[0])->whereMonth('created_at', $periodo[1]);
+		
+		$cuenta = $request->cuenta ?? 0;
+		$parametros['cuenta_elegida'] = $cuenta;
+
+		if ($cuenta == 0) {
+			$query->whereHas('movimiento', function ($query) {
+				$query->whereNull('cuenta_facturacion');
+			});
+		} else {
+			$query->whereHas('movimiento', function ($query) use ($cuenta) {
+				$query->where('cuenta_facturacion', $cuenta);
+			});
+		}
+
+		return view('adm.clients.pedidos.facturacion', [
+			'periodos'      => $periodos,
+			'cuentas'  		=> Movimiento::CUENTAS,
+			'parametros'    => $parametros,
+			'pedidos' 		=> $query->orderBy('created_at', 'DESC')->get()
+		]);
+	}
+
+	public function descargarFacturacion(Request $request){
+		
+		$periodo = explode('-', $request->periodo_elegido);
+		$cuenta  = Movimiento::CUENTAS[$request->cuenta_elegida];
+		$archivo = "facturacion-periodo-cuenta-$cuenta-" . $periodo[1] . "-" . $periodo[0] . ".xlsx";
+		return Excel::download(new FacturacionExport($periodo[0], $periodo[1], $request->cuenta_elegida), $archivo);
 	}
 }

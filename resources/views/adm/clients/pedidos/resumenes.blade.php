@@ -1,7 +1,7 @@
 @php
 	$csrf_token = csrf_token();
 	$parameters = [];
-    $parameters['page'] = (isset($_GET['page'])) ? $_GET['page'] : 1 ;
+    $parameters['page'] = $_GET['page'] ?? 1 ;
 @endphp
 @extends('layouts.back')
 @section('title','Resumenes de Pedidos')

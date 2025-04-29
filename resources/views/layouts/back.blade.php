@@ -109,6 +109,7 @@
 									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('admin/clientes/cliente/edit') }}">Editar clientes</a></li>
 									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('admin/clientes/pedidos') }}">Pedidos</a></li>
 									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('admin/clientes/pedidos/resumenes') }}">Resumen de Pedidos</a></li>
+									<li class="@if($subseccion=="cliente/edit") active @endif"><a href="{{ url('admin/clientes/pedidos/listar-facturacion') }}">Facturación</a></li>
 								</ul>
 							</div>
 						</li>

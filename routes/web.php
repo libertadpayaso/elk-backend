@@ -135,6 +135,8 @@ Route::group(['prefix' => 'admin'], function() {
 			Route::post('agregar', 'PedidoController@agregarPrenda');
 			Route::post('quitar', 'PedidoController@quitarPrenda');
 			Route::get('linea/{id}', 'LineaController@obtener');
+			Route::get('listar-facturacion', 'PedidoController@listarParaFacturacion');
+			Route::post('descargar-facturacion', 'PedidoController@descargarFacturacion');
 		});
 	});
 
